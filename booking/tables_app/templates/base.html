@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Booking Game{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'tables_app/css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Booking Game</h1>
+        <nav>
+            {% if user.is_authenticated %}
+                <span>Connecté : {{ user.username }}</span>
+                <a href="{% url 'logout' %}">Se déconnecter</a>
+            {% else %}
+                <a href="{% url 'login' %}">Connexion</a> |
+                <a href="{% url 'register' %}">Inscription</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{% static 'tables_app/js/script.js' %}"></script>
+</body>
+</html>
