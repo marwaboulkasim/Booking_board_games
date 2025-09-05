@@ -1,17 +1,20 @@
-# --- Python ---
-__pycache__/
+.venv
+venv
+
+#--- Python ---
+pycache/
 *.py[cod]
 *.pyo
 *.pyd
 *.so
 
-# --- Virtualenv ---
+#--- Virtualenv ---
 .venv/
 env/
 venv/
 ENV/
 
-# --- Django ---
+#--- Django ---
 *.log
 *.pot
 *.pyc
@@ -19,7 +22,7 @@ db.sqlite3
 media/
 staticfiles/
 
-# --- IDE/OS ---
+#--- IDE/OS ---
 .vscode/
 .idea/
 .DS_Store

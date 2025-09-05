@@ -38,10 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
      'tables_app',  # ✅ ton app doit être listée ici
+     'users_app', # create user_app marwa
+     
 ]
-
-
-
 
 
 
@@ -103,6 +102,8 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+
+    
 ]
 
 
@@ -127,3 +128,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# auth User Marwa
+AUTH_USER_MODEL = 'users_app.User'
+

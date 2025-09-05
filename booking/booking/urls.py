@@ -1,14 +1,8 @@
 from django.contrib import admin
-from django.urls import path, include  # <- include est nécessaire
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('tables_app.urls')),  # <- inclut les urls de ton app
+    path('', include('tables_app.urls')),     # accueil
+    path('users/', include('users_app.urls')) # auth
 ]
-
-
-
-
-
-
-
