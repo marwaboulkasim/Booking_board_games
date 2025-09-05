@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Calendrier{% endblock %}
+
+{% block content %}
+<h1>Calendrier du {{ date }}</h1>
+
+<form method="get" action="{% url 'tables_app:calendar' %}">
+    <label for="date">Choisir une date :</label>
+    <input type="date" id="date" name="date" value="{{ date }}">
+    <button type="submit">Voir</button>
+</form>
+
+<hr>
+
+<h2>État des tables</h2>
+<ul>
+    {% for item in tables %}
+        <li>
+            Table {{ item.table.number_table }} — {{ item.state }}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
