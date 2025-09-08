@@ -60,7 +60,7 @@ class Table(models.Model):
 class Booking(models.Model):
     date = models.DateField(default=timezone.now)
     start_time = models.TimeField()
-    duration = models.IntegerField(help_text="Durée en minutes")
+    duration = models.DurationField(help_text="Durée (HH:MM:SS)")
     booking_type = models.CharField(max_length=10, choices=BookingType.choices)
     table = models.ForeignKey("Table", on_delete=models.CASCADE)
     main_customer = models.ForeignKey("Customer", on_delete=models.CASCADE, related_name='bookings')
