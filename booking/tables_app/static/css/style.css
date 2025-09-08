@@ -266,3 +266,109 @@ footer {
     color: white;
     border-radius: 8px;
 }
+
+
+.reserve-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    margin-left: 10px;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.reserve-btn:hover {
+    background-color: #45a049;
+}
+
+/*#modif */
+.calendar-container {
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.calendar-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.calendar-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tables-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.tables-list li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.free {
+    color: green;
+    font-weight: bold;
+}
+
+.reserved {
+    color: red;
+    font-weight: bold;
+}
+
+.reserve-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.reserve-btn:hover {
+    background-color: #45a049;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #f9f9f9;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 400px;
+    border-radius: 8px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}
+

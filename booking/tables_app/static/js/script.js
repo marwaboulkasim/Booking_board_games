@@ -11,3 +11,23 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 console.log("JS chargé !");
+
+
+function openBookingModal(tableId, date) {
+    document.getElementById('table_id').value = tableId;
+    document.getElementById('date_input').value = date;
+    document.getElementById('bookingForm').action = `/users/create-booking/${tableId}/`; // mise à jour dynamique de l'action
+    document.getElementById('bookingModal').style.display = 'block';
+}
+
+function closeBookingModal() {
+    document.getElementById('bookingModal').style.display = 'none';
+}
+
+// Fermer le modal si clic en dehors
+window.onclick = function(event) {
+    let modal = document.getElementById('bookingModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}

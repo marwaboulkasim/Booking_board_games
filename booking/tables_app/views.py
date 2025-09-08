@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from .models import Table, Booking, BookingType
 import datetime
-
+from django.shortcuts import render, get_object_or_404, redirect
+from django.utils.dateparse import parse_duration
 # --- Accueil ---
 def home_view(request):
     return render(request, 'tables_app/home.html')
@@ -37,4 +38,6 @@ def calendar_view(request):
         'date': selected_date,
         'tables': tables_state,
     })
+
+
 

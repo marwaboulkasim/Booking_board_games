@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Calendrier{% endblock %}
 
@@ -6,15 +7,16 @@
 <div class="calendar-container">
     <h1>📅 Calendrier du {{ date }}</h1>
 
+    <!-- Formulaire pour choisir une date -->
     <form method="get" action="{% url 'tables_app:calendar' %}" class="calendar-form">
         <label for="date">Choisir une date :</label>
         <input type="date" id="date" name="date" value="{{ date }}">
-
         <button type="submit">Voir</button>
     </form>
 
     <hr>
 
+    <!-- État des tables -->
     <h2>État des tables</h2>
     <ul class="tables-list">
         {% for t in tables %}
@@ -23,10 +25,56 @@
                 <span class="{% if t.state == 'Libre' %}free{% else %}reserved{% endif %}">
                     {{ t.state }}
                 </span>
+
+                {% if t.state == "Libre" %}
+                    <!-- Bouton pour ouvrir le modal -->
+                    <button class="reserve-btn" onclick="openBookingModal({{ t.table.id }}, '{{ date }}')">
+                        Réserver
+                    </button>
+                {% endif %}
             </li>
         {% empty %}
             <li>Aucune table pour ce jour.</li>
         {% endfor %}
     </ul>
 </div>
+
+<!-- Modal pour la réservation -->
+<div id="bookingModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeBookingModal()">&times;</span>
+        <h2>Réserver une table</h2>
+
+        <form id="bookingForm" method="POST" action="{% url 'users_app:create_private_booking_user' 0 %}">
+            {% csrf_token %}
+            <input type="hidden" id="table_id" name="table_id" value="">
+            <input type="hidden" id="date_input" name="date" value="">
+
+            <label for="booking_type">Type de réservation :</label>
+            <select id="booking_type" name="booking_type">
+                <option value="privée">Privée</option>
+                <option value="publique">Publique</option>
+            </select>
+            <br><br>
+
+            <label for="start_time">Heure de début :</label>
+            <input type="time" id="start_time" name="start_time" required>
+            <br><br>
+
+            <label for="duration">Durée (HH:MM:SS) :</label>
+            <input type="text" id="duration" name="duration" value="01:00:00" required>
+            <br><br>
+
+            <button type="submit">Confirmer</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'tables_app/css/calendar.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'tables_app/js/calendar.js' %}"></script>
 {% endblock %}
