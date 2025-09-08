@@ -5,6 +5,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('tables_app.urls')),     # accueil
     path('users/', include('users_app.urls')), # auth
-    path('calendar/', include('tables_app.urls')) # calendar GETGET
+    path('calendar/', include('tables_app.urls')) # calendar
 ]
-
