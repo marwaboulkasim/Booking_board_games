@@ -38,3 +38,7 @@ def calendar_view(request):
         'tables': tables_state,
     })
 
+# --- A propos ---
+
+def about_view(request):
+    return render(request, 'tables_app/about.html')
