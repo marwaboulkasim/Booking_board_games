@@ -14,16 +14,16 @@
             <p>Vous êtes connecté en tant que <strong>{{ user.username }}</strong>.</p>
             <nav class="menu">
                 <ul>
-                    <li><a href="{% url 'about' %}">Qui sommes-nous ?</a></li>
-                    <li><a href="{% url 'games' %}">Nos jeux disponibles</a></li>
+                    <li><a>Qui sommes-nous ?</a></li>
+                    <li><a>Nos jeux disponibles</a></li>
                     <li><a href="{% url 'tables_app:calendar' %}">Réserver une table</a></li>
-                    <li><a href="{% url 'contact' %}">Nous contacter</a></li>
-                    <li><a href="{% url 'account' %}">Gérer mon compte</a></li>
-                    <li><a href="{% url 'logout' %}">Déconnexion</a></li>
+                    <li><a>Nous contacter</a></li>
+                    <li><a>Gérer mon compte</a></li>
+                    <li><a href="{% url 'users_app:logout' %}">Déconnexion</a></li>
                 </ul>
             </nav>
         {% else %}
-            <p>Veuillez vous <a href="{% url 'login' %}">connecter</a> ou vous <a href="{% url 'register' %}">inscrire</a>.</p>
+            <p>Veuillez vous <a href="{% url 'users_app:login' %}">connecter</a> ou vous <a href="{% url 'users_app:register' %}">inscrire</a>.</p>
         {% endif %}
     </div>
 </body>
