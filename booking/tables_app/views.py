@@ -37,3 +37,4 @@ def calendar_view(request):
         'date': selected_date,
         'tables': tables_state,
     })
+
