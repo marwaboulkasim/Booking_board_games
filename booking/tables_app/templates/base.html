@@ -15,10 +15,10 @@
         <nav>
             {% if user.is_authenticated %}
                 <span>Connecté : {{ user.username }}</span>
-                <a href="{% url 'logout' %}">Se déconnecter</a>
+                <a href="{% url 'users_app:logout' %}">Se déconnecter</a>
             {% else %}
-                <a href="{% url 'login' %}">Connexion</a> |
-                <a href="{% url 'register' %}">Inscription</a>
+                <a href="{% url 'users_app:login' %}">Connexion</a> |
+                <a href="{% url 'users_app:register' %}">Inscription</a>
             {% endif %}
         </nav>
     </header>

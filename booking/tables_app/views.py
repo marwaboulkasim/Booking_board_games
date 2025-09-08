@@ -38,19 +38,3 @@ def calendar_view(request):
         'tables': tables_state,
     })
 
-
-# --- Pages supplémentaires ---
-def about_view(request):
-    return render(request, 'tables_app/about.html')
-
-def games_view(request):
-    return render(request, 'tables_app/games.html')
-
-def book_table_view(request):
-    return render(request, 'tables_app/book_table.html')
-
-def contact_view(request):
-    return render(request, 'tables_app/contact.html')
-
-def account_view(request):
-    return render(request, 'tables_app/account.html')

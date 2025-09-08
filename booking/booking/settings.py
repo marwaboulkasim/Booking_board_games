@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-     'tables_app',  # ✅ ton app doit être listée ici
+     'tables_app',  # ton app doit être listée ici
      'users_app', # create user_app marwa
      
 ]

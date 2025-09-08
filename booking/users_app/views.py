@@ -31,5 +31,3 @@ def logout_view(request):
     logout(request)
     return redirect('tables_app:home')
 #fin marwa
-
-
