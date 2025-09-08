@@ -1,0 +1,11 @@
+name_game,category_game,nb_player_min_game,nb_player_max_game,stock_game,availability_game
+Catan,Stratégie,3,4,3,True
+Dixit,Ambiance,3,6,2,True
+Carcassonne,Stratégie,2,5,2,True
+7 Wonders,Stratégie,3,7,2,True
+Uno,Cartes,2,10,4,True
+Time’s Up,Ambiance,4,12,4,True
+Pandemic,Coopératif,2,4,2,True
+Chess,Classique,2,2,3,True
+Monopoly,Famille,2,6,3,True
+Secret,Ambiance,5,10,1,True
