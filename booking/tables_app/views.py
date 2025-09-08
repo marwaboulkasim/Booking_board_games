@@ -1,13 +1,14 @@
-# tables_app/views.py
 from django.shortcuts import render
 from .models import Table, Booking, BookingType
 import datetime
 
+# --- Accueil ---
 def home_view(request):
     return render(request, 'tables_app/home.html')
 
+
+# --- Calendrier ---
 def calendar_view(request):
-    
     # Lecture de la date depuis l'URL (?date=YYYY-MM-DD)
     date_str = request.GET.get('date')
     if date_str:

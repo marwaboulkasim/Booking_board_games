@@ -5,5 +5,4 @@ app_name = "tables_app"
 
 urlpatterns = [
     path('', views.home_view, name='home'),
-    path('calendar/', views.calendar_view, name='calendar'),
 ]

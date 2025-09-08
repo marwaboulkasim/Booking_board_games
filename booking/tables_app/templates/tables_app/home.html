@@ -1,24 +1,30 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
+    <meta charset="UTF-8">
     <title>Booking Game</title>
-    <link rel="stylesheet" href="{% static 'tables_app/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h2>Bienvenue sur Booking Game !</h2>
-    <nav>
-        <ul>
-            <li><a href="{% url 'tables_app:home' %}">Home</a></li>
-            <li><a href="{% url 'tables_app:calendar' %}">Réserver</a></li>
-        </ul>
-    </nav>
-    {% if user.is_authenticated %}
-        <p>Vous êtes connecté en tant que {{ user.username }}.</p>
-        <a href="{% url 'logout' %}">Déconnexion</a>
-    {% else %}
-        <p>Veuillez vous <a href="{% url 'login' %}">connecter</a> ou vous <a href="{% url 'register' %}">inscrire</a>.</p>
-    {% endif %}
-    <script src="{% static 'tables_app/js/script.js' %}"></script>
+    <div class="container">
+        <h1>Bienvenue sur Booking Game 🎲</h1>
+
+        {% if user.is_authenticated %}
+            <p>Vous êtes connecté en tant que <strong>{{ user.username }}</strong>.</p>
+            <nav class="menu">
+                <ul>
+                    <li><a href="{% url 'about' %}">Qui sommes-nous ?</a></li>
+                    <li><a href="{% url 'games' %}">Nos jeux disponibles</a></li>
+                    <li><a href="{% url 'tables_app:calendar' %}">Réserver une table</a></li>
+                    <li><a href="{% url 'contact' %}">Nous contacter</a></li>
+                    <li><a href="{% url 'account' %}">Gérer mon compte</a></li>
+                    <li><a href="{% url 'logout' %}">Déconnexion</a></li>
+                </ul>
+            </nav>
+        {% else %}
+            <p>Veuillez vous <a href="{% url 'login' %}">connecter</a> ou vous <a href="{% url 'register' %}">inscrire</a>.</p>
+        {% endif %}
+    </div>
 </body>
 </html>
