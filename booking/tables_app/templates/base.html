@@ -16,6 +16,7 @@
             {% if user.is_authenticated %}
                 <span>Connecté : {{ user.username }}</span>
                 <a href="{% url 'users_app:logout' %}">Se déconnecter</a>
+                <a href="{% url 'tables_app:home' %}" class="btn">Accueil</a>
             {% else %}
                 <a href="{% url 'users_app:login' %}">Connexion</a> |
                 <a href="{% url 'users_app:register' %}">Inscription</a>
@@ -29,5 +30,6 @@
     </main>
 
     <script src="{% static 'tables_app/js/script.js' %}"></script>
+
 </body>
 </html>
