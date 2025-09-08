@@ -15,10 +15,12 @@
 
 <h2>État des tables</h2>
 <ul>
-    {% for item in tables %}
+    {% for <table></table> in tables %}
         <li>
-            Table {{ item.table.number_table }} — {{ item.state }}
+            Table {{ table.number_table }} — {{ table.table_state }}
         </li>
-    {% endfor %}
+    {% empty %}
+    <li>Aucune table pour ce jour.</li>
 </ul>
+{% endfor %}
 {% endblock %}
