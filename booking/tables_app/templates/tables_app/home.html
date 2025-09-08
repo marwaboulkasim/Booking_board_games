@@ -3,23 +3,28 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking Game</title>
-    <link rel="stylesheet" href="{% static 'tables_app/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <div class="container">
-        <h1>Bienvenue sur Booking Game !</h1>
+        <h1>Bienvenue sur Booking Game 🎲</h1>
 
         {% if user.is_authenticated %}
             <p>Vous êtes connecté en tant que <strong>{{ user.username }}</strong>.</p>
-            <a class="btn" href="{% url 'logout' %}">Déconnexion</a>
+            <nav class="menu">
+                <ul>
+                    <li><a href="{% url 'about' %}">Qui sommes-nous ?</a></li>
+                    <li><a href="{% url 'games' %}">Nos jeux disponibles</a></li>
+                    <li><a href="{% url 'tables_app:calendar' %}">Réserver une table</a></li>
+                    <li><a href="{% url 'contact' %}">Nous contacter</a></li>
+                    <li><a href="{% url 'account' %}">Gérer mon compte</a></li>
+                    <li><a href="{% url 'logout' %}">Déconnexion</a></li>
+                </ul>
+            </nav>
         {% else %}
             <p>Veuillez vous <a href="{% url 'login' %}">connecter</a> ou vous <a href="{% url 'register' %}">inscrire</a>.</p>
         {% endif %}
-
-        <a class="btn" href="{% url 'tables_app:calendar' %}">Voir le Calendrier</a>
     </div>
 </body>
 </html>
-
