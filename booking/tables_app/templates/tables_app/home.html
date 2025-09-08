@@ -7,6 +7,12 @@
 </head>
 <body>
     <h2>Bienvenue sur Booking Game !</h2>
+    <nav>
+        <ul>
+            <li><a href="{% url 'tables_app:home' %}">Home</a></li>
+            <li><a href="{% url 'tables_app:calendar' %}">Réserver</a></li>
+        </ul>
+    </nav>
     {% if user.is_authenticated %}
         <p>Vous êtes connecté en tant que {{ user.username }}.</p>
         <a href="{% url 'logout' %}">Déconnexion</a>
