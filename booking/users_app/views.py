@@ -14,7 +14,7 @@ def register_view(request):
             return redirect('tables_app:home')
     else:
         form = CustomUserCreationForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'users_app/register.html', {'form': form})
 
 
 def login_view(request):
@@ -26,7 +26,7 @@ def login_view(request):
             return redirect('tables_app:home')
     else:
         form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'users_app/login.html', {'form': form})
 
 
 def logout_view(request):
