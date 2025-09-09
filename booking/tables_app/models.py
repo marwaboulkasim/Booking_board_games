@@ -21,13 +21,17 @@ class BookingType(models.TextChoices):
 class Game(models.Model):
     name_game = models.CharField(max_length=100)
     category_game = models.CharField(max_length=50)
+    duration_game = models.CharField(max_length=50, null=True, blank=True)
     nb_player_min_game = models.IntegerField()
     nb_player_max_game = models.IntegerField()
     stock_game = models.IntegerField(default=0)
     availability_game = models.BooleanField(default=True)
+    presentation = models.TextField(null=True, blank=True) 
+    image_url = models.URLField(max_length=500, null=True, blank=True)
 
     def __str__(self):
         return self.name_game
+
 
 
 # Customer
