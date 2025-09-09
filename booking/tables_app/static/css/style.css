@@ -154,10 +154,6 @@ input, textarea, select {
 
 
 
-
-
-
-
 /* === CALENDAR PAGE === */
 .calendar-container {
     max-width: 900px;
@@ -280,95 +276,88 @@ footer {
 .reserve-btn:hover {
     background-color: #45a049;
 }
-
-/*#modif */
-.calendar-container {
-    max-width: 700px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-}
-
-.calendar-container h1 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.calendar-form {
+/* === Reservation Card === */
+.calendar-page .reservation-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 20px;
+    flex-direction: column;
+    gap: 15px;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.tables-list {
-    list-style-type: none;
-    padding: 0;
+.calendar-page .reservation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
 }
 
-.tables-list li {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+/* Form title */
+.calendar-page .reservation-card h5,
+.calendar-page .reservation-card label {
+    color: #34495e;
+    font-weight: 600;
 }
 
-.free {
-    color: green;
-    font-weight: bold;
+/* Inputs & Select */
+.calendar-page .reservation-card .form-control,
+.calendar-page .reservation-card .form-select {
+    border-radius: 10px;
+    border: 1px solid #dcdde1;
+    padding: 10px 12px;
+    font-size: 15px;
+    transition: border 0.2s, box-shadow 0.2s;
 }
 
-.reserved {
-    color: red;
-    font-weight: bold;
+.calendar-page .reservation-card .form-control:focus,
+.calendar-page .reservation-card .form-select:focus {
+    border-color: #6c5ce7;
+    box-shadow: 0 0 5px rgba(108,92,231,0.3);
+    outline: none;
 }
 
-.reserve-btn {
-    background-color: #4CAF50;
+/* Buttons */
+.calendar-page .reservation-card button[type="submit"] {
+    background-color: #6c5ce7;
     color: white;
-    padding: 5px 10px;
-    text-decoration: none;
+    font-weight: 600;
+    padding: 12px;
+    border-radius: 10px;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
 }
 
-.reserve-btn:hover {
-    background-color: #45a049;
+.calendar-page .reservation-card button[type="submit"]:hover {
+    background-color: #5a4bcf;
+    transform: scale(1.03);
 }
 
-/* Modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+/* Cancel button */
+.calendar-page .reservation-card .btn-secondary {
+    background-color: #dcdde1;
+    color: #34495e;
+    font-weight: 500;
+    border-radius: 10px;
+    transition: background 0.3s, transform 0.2s;
 }
 
-.modal-content {
-    background-color: #f9f9f9;
-    margin: 10% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 400px;
-    border-radius: 8px;
+.calendar-page .reservation-card .btn-secondary:hover {
+    background-color: #cfd1d8;
+    transform: scale(1.03);
 }
 
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 24px;
-    cursor: pointer;
+/* Form spacing */
+.calendar-page .reservation-card .mb-3 {
+    margin-bottom: 1rem;
 }
 
-.close:hover {
-    color: black;
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .calendar-page .reservation-card {
+        margin-top: 20px;
+        position: relative;
+        top: auto;
+    }
 }
-

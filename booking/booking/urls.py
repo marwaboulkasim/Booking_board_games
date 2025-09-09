@@ -8,4 +8,7 @@ urlpatterns = [
     path('users/', include('users_app.urls')), # auth
     path('calendar/', include('tables_app.urls')), # calendar
 
+
 ]
+
+
