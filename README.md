@@ -45,9 +45,12 @@ Booking_board_games/
    git https://github.com/marwaboulkasim/Booking_board_games.git
    cd Booking_board_games
 2. **Créer un environnement virtuel** :
-   ```python -m venv .venv
+
+   ```
+   python -m venv .venv
 source .venv/bin/activate   # sous Linux / Mac
-.venv\Scripts\activate      # sous Windows```
+.venv\Scripts\activate      # sous Windows
+```
 3. **Installer les dépendances** :
 ```pip install -r requirements.txt```
 
