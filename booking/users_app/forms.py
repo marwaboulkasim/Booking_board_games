@@ -1,6 +1,7 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth import get_user_model
+from tables_app.models import Game
 
 User = get_user_model()
 
@@ -19,5 +20,25 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         fields = ['username', 'password1', 'password2']
 
+# --- Gestion Profil Utilisateur --- #
 
+class ProfileForm(UserChangeForm):
+    password = None
+    
+    favorite_games = forms.ModelMultipleChoiceField(
+        queryset=Game.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        help_text='Choisissez jusqu\'à 3 jeux'
+    )
+    
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'phone', 'favorite_games'] # rajouter received_notifications une fois la fonction créée
+    
+    def clean_favorite_games(self):
+        games = self.cleaned_data.get('favorite_games')
+        if len(games) > 3:
+            raise forms.ValidationError('Vous ne pouvez choisir que 3 jeux max.')
+        return games
 

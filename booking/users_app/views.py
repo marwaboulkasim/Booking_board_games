@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, ProfileForm, PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 #marwa
 def register_view(request):
     if request.method == 'POST':
@@ -31,3 +33,22 @@ def logout_view(request):
     logout(request)
     return redirect('tables_app:home')
 #fin marwa
+
+@login_required
+def profile_view(request):
+    user = request.user
+    if request.method == "POST":
+        form = ProfileForm(request.POST, instance=user)
+        password_form = PasswordChangeForm(user, request.POST)
+        if form.is_valid() and password_form.is_valid():
+            form.save()
+            password_form.save()
+            update_session_auth_hash(request, password_form.user)
+            return redirect('users_app:profile')
+    else:
+        form = ProfileForm(instance=user)
+        password_form = PasswordChangeForm(user)
+    return render(request, 'users_app/profile.html', {
+        'form': form,
+        'password_form': password_form
+    })

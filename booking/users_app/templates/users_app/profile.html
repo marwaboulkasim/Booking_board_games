@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block content %}
+<h1>Mon profil</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend>Informations personnelles</legend>
+        {{ form.as_p }}
+    </fieldset>
+
+    <fieldset>
+        <legend>Changer le mot de passe</legend>
+        {{ password_form.as_p }}
+    </fieldset>
+
+    <button type="submit">Enregistrer les modifications</button>
+</form>
+{% endblock %}
