@@ -135,3 +135,9 @@ AUTH_USER_MODEL = 'users_app.User'
 # STATICFILES_DIRS = [BASE_DIR / "static"] #marwa
 
 
+# Lecture des images (pour chaque jeu)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+

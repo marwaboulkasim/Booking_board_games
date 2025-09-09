@@ -7,4 +7,8 @@ urlpatterns = [
     path('', views.home_view, name='home'),
     path('calendar/', views.calendar_view, name='calendar'),
     path('about/', views.about_view, name='about'),
+    path("games/", views.games, name="games"),
+    path("games/<int:game_id>/", views.game_detail, name="game_detail"),
 ]
+
+
