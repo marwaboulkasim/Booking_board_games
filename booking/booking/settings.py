@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
      'tables_app',  # ton app doit être listée ici
      'users_app', # create user_app marwa
+     'contact_app', # app pour la page de contact
      
 ]
 
