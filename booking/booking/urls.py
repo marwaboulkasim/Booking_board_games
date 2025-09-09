@@ -8,3 +8,5 @@ urlpatterns = [
     path('users/', include('users_app.urls')),  # users_app gère auth + profil
     path('contact/', include('contact_app.urls')) # contact
 ]
+
+

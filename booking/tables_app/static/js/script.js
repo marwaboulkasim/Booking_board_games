@@ -1,13 +1,27 @@
-// Exemple simple d'interaction JS
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("JS chargé !");
-    
-    const buttons = document.querySelectorAll("button");
-    buttons.forEach(btn => {
+    console.log("JS calendar.js chargé");
+
+    const bookingForm = document.getElementById("bookingForm");
+    const bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
+
+    // Déclencheur sur les boutons "Réserver"
+    document.querySelectorAll(".reserve-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-            btn.style.opacity = 0.8; // petite interaction visuelle
-            setTimeout(() => btn.style.opacity = 1, 200);
+            const tableId = btn.dataset.tableId;
+            const date = btn.dataset.date;
+
+            console.log("Réserver clic :", tableId, date);
+
+            // Remplir les inputs cachés
+            document.getElementById("table_id").value = tableId;
+            document.getElementById("date_input").value = date;
+
+            // Mettre à jour l'action du formulaire
+            bookingForm.action = `/users/create-booking/${tableId}/`;
+
+
+            // Ouvrir le modal
+            bookingModal.show();
         });
     });
 });
-console.log("JS chargé !");
