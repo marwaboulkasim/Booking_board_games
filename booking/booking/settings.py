@@ -61,7 +61,7 @@ ROOT_URLCONF = 'booking.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -139,7 +139,7 @@ AUTH_USER_MODEL = 'users_app.User'
 # Lecture des images (pour chaque jeu)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-# STATICFILES_DIRS = [BASE_DIR / 'static']
+STATICFILES_DIRS = []
 
 
 
