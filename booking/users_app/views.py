@@ -21,7 +21,7 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('tables_app:calendar')
+            return redirect('tables_app:home')
     else:
         form = CustomUserCreationForm()
     return render(request, 'users_app/register.html', {'form': form})
@@ -33,7 +33,7 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('tables_app:calendar')
+            return redirect('tables_app:home')
     else:
         form = AuthenticationForm()
     return render(request, 'users_app/login.html', {'form': form})
