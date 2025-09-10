@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from .models import Table, Booking
 import datetime
+from django.shortcuts import render, redirect, get_object_or_404
+
 
 # --- Accueil ---
 def home_view(request):
@@ -40,6 +42,18 @@ def calendar_view(request):
         'date': selected_date,
         'tables': tables_state,
     })
+
+# confirmation marwa a l'instant
+def booking_confirmation(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    return render(request, "tables_app/booking_confirmation.html", {
+        "booking": booking
+    })
+
+#fin
+
+
+
 
 # --- Pages supplémentaires ---
 def about_view(request):
