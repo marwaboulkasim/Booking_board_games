@@ -6,8 +6,11 @@ from tables_app.models import Game
 User = get_user_model()
 
 class CustomUserCreationForm(UserCreationForm):
-    username = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Nom d’utilisateur', 'class': 'form-input'})
+    username = forms.EmailField(
+        widget=forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-input'})
+    )
+    pseudo = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'Pseudo', 'class': 'form-input'})
     )
     password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={'placeholder': 'Mot de passe', 'class': 'form-input'})
@@ -18,7 +21,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'password1', 'password2']
+        fields = ['username', 'pseudo', 'password1', 'password2']
 
 # --- Gestion Profil Utilisateur --- #
 
@@ -34,7 +37,7 @@ class ProfileForm(UserChangeForm):
     
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'phone', 'favorite_games'] # rajouter received_notifications une fois la fonction créée
+        fields = ['username', 'pseudo', 'first_name', 'last_name', 'phone', 'favorite_games'] # rajouter received_notifications une fois la fonction créée
     
     def clean_favorite_games(self):
         games = self.cleaned_data.get('favorite_games')

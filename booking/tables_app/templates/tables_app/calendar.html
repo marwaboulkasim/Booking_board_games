@@ -9,7 +9,7 @@
 
     <!-- Formulaire pour choisir une date -->
     <form method="get" action="{% url 'tables_app:calendar' %}" class="mb-3 d-flex align-items-center gap-2">
-        <input type="date" id="date" name="date" value="{{ date }}" class="form-control w-auto">
+        <input type="date" id="date" name="date" value="{{ date }}" class="form-control w-auto" required>
         <button type="submit" class="btn btn-primary btn-sm">Voir</button>
     </form>
 

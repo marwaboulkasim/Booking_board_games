@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm
 from tables_app.models import Table, Booking
 import datetime
-
+from django.contrib import messages
 
 def home(request):
     return render(request, "home.html")
@@ -75,21 +75,32 @@ def create_booking(request, table_id):
         duration_str = request.POST.get("duration")
         booking_type = request.POST.get("booking_type")
 
-        # Conversion des chaînes en objets Python
-        date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+        # --- Conversion de la date ---
+        try:
+            date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+        except ValueError:
+            try:
+                date = datetime.datetime.strptime(date_str, "%b. %d, %Y").date()
+            except ValueError:
+                messages.error(request, "Format de date invalide.")
+                return redirect("tables_app:calendar")
+
+        # --- Conversion de l'heure de début ---
         start_time = datetime.datetime.strptime(start_time_str, "%H:%M").time()
+
+        # --- Conversion de la durée ---
         h, m, s = map(int, duration_str.split(":"))
         duration = datetime.timedelta(hours=h, minutes=m, seconds=s)
 
-        # Création de la réservation
+        # --- Création de la réservation ---
         Booking.objects.create(
             table=table,
-            main_customer=request.user.customer,  # Assurez-vous que User a un OneToOne vers Customer
+            main_customer=request.user,
             date=date,
             start_time=start_time,
             duration=duration,
-            booking_type=booking_type
+            booking_type=booking_type,
         )
 
-    # Retour au calendrier après réservation
-    return redirect('tables_app:calendar')
+    return redirect("tables_app:calendar")
+

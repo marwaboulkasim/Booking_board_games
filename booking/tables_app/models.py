@@ -34,15 +34,6 @@ class Game(models.Model):
 
 
 
-# Customer
-class Customer(models.Model):
-        user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
-    # champs restants si tu veux les conserver
-        legacy_id = models.IntegerField(null=True, blank=True)
-        def __str__(self):
-            return f"Customer for {self.user.username}"
-
-
 # Tables
 class Table(models.Model):
     number_table = models.IntegerField(unique=True)
@@ -50,7 +41,7 @@ class Table(models.Model):
     state_table = models.CharField(max_length=10, choices=TableEtat.choices, default=TableEtat.LIBRE)
     game_table = models.ForeignKey("Game", null=True, blank=True, on_delete=models.SET_NULL)
     code_table = models.CharField(max_length=20, null=True, blank=True)
-    customer_table = models.ManyToManyField("Customer", blank=True, related_name='tables')
+    customer_table = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='tables')
 
     def __str__(self):
         return f"Table {self.number_table} - {self.state_table}"
@@ -63,7 +54,7 @@ class Booking(models.Model):
     duration = models.DurationField(help_text="Durée (HH:MM:SS)")
     booking_type = models.CharField(max_length=10, choices=BookingType.choices)
     table = models.ForeignKey("Table", on_delete=models.CASCADE)
-    main_customer = models.ForeignKey("Customer", on_delete=models.CASCADE, related_name='bookings')
+    main_customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bookings')
 
     def __str__(self):
         return f"{self.main_customer.pseudo} - Table {self.table.number_table} le {self.date}"
