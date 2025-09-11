@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth import get_user_model
-from tables_app.models import Game
+from tables_app.models import Game, Booking
 
 User = get_user_model()
 
@@ -56,3 +56,15 @@ class ProfileForm(UserChangeForm):
             raise forms.ValidationError('Vous ne pouvez choisir que 3 jeux max.')
         return games
 
+# --- Edition de réservation --- #
+
+class EditBookingForm(forms.ModelForm):
+    class Meta:
+        model = Booking
+        fields = ["date", "start_time", "duration", "booking_type", 'table']
+        widgets = {
+            "date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
+            "start_time": forms.TimeInput(attrs={"type": "time", "class": "form-control"}),
+            "duration": forms.TextInput(attrs={"placeholder": "01:00:00", "class": "form-control"}),
+            "booking_type": forms.Select(attrs={"class": "form-select"}),
+        }

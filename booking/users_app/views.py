@@ -8,11 +8,11 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm
 from tables_app.models import Table, Booking
+from users_app.forms import EditBookingForm
 import datetime
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from tables_app.models import Table, Booking
 import random
 import string
 
@@ -53,7 +53,7 @@ def logout_view(request):
     return redirect('tables_app:home')
 
 
-
+# --- Gestion profil user ---#
 @login_required
 def profile_view(request):
     user = request.user
@@ -133,3 +133,37 @@ def create_booking(request, table_id):
 def booking_confirmation(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
     return render(request, "tables_app/booking_confirmation.html", {"booking": booking})
+
+# --- Page gestion des réservations (User) --- #
+
+@login_required
+def my_booking_view(request):
+    bookings = Booking.objects.filter(main_customer=request.user).select_related('table')
+    return render(request, 'users_app/my_bookings.html', {'bookings': bookings})
+
+# --- Modification de réservation --- #
+@login_required
+def edit_booking_view(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, main_customer=request.user)
+
+    if request.method == "POST":
+        form = EditBookingForm(request.POST, instance=booking)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Réservation mise à jour avec succès !")
+            return redirect("users_app:my_bookings")
+    else:
+        form = EditBookingForm(instance=booking)
+
+    return render(request, "users_app/edit_booking.html", {"form": form, "booking": booking})
+
+# --- Suppression de réservation --- #
+
+@login_required
+def delete_booking_view(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, main_customer=request.user)
+    if request.method == "POST":
+        booking.delete()
+        messages.success(request, "Réservation supprimée !")
+        return redirect("users_app:my_bookings")
+    return render(request, "users_app/delete_booking_confirm.html", {"booking": booking})

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Modifier une réservation{% endblock %}
+
+{% block content %}
+<h1>Modifier la réservation</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <fieldset>
+        <legend>Informations générales</legend>
+
+        <p>
+            {{ form.date.label_tag }}<br>
+            {{ form.date }}
+            {{ form.date.errors }}
+        </p>
+
+        <p>
+            {{ form.start_time.label_tag }}<br>
+            {{ form.start_time }}
+            {{ form.start_time.errors }}
+        </p>
+
+        <p>
+            {{ form.duration.label_tag }}<br>
+            {{ form.duration }}
+            {{ form.duration.errors }}
+        </p>
+
+        <p>
+            {{ form.booking_type.label_tag }}<br>
+            {{ form.booking_type }}
+            {{ form.booking_type.errors }}
+        </p>
+
+        {% if form.table %}
+        <p>
+            {{ form.table.label_tag }}<br>
+            {{ form.table }}
+            {{ form.table.errors }}
+        </p>
+        {% endif %}
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
+    <a href="{% url 'users_app:my_bookings' %}" class="btn btn-secondary mt-3">Annuler</a>
+</form>
+{% endblock %}
+

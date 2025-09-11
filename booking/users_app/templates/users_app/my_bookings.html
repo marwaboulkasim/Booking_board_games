@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Mes réservations{% endblock %}
+{% block content %}
+<h1>Mes réservations</h1>
+
+{% if bookings %}
+<table>
+  <tr>
+    <th>Date</th><th>Heure</th><th>Durée</th><th>Table</th><th>Type</th><th>Actions</th>
+  </tr>
+  {% for b in bookings %}
+  <tr>
+    <td>{{ b.date }}</td>
+    <td>{{ b.start_time }}</td>
+    <td>{{ b.duration }}</td>
+    <td>{{ b.table.number_table }}</td>
+    <td>{{ b.booking_type }}</td>
+    <td>
+      <a href="{% url 'users_app:edit_booking' b.id %}">✏️ Modifier</a> |
+      <a href="{% url 'users_app:delete_booking' b.id %}">🗑 Supprimer</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Vous n'avez pas encore de réservation.</p>
+{% endif %}
+{% endblock %}
