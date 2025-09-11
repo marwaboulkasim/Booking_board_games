@@ -11,7 +11,7 @@
 
         <!-- Bouton retour -->
         <div class="back-home">
-            <a href="{% url 'tables_app:games' %}" class="btn-home">Retour aux jeux</a>
+            <a href="{% url 'tables_app:games' %}" class="btn">Retour aux jeux</a>
         </div>
 
         <h1>{{ game.name_game }}</h1>
@@ -37,6 +37,13 @@
                 {% endif %}
             </div>
 
+        </div>
+
+         <!-- Bouton réserver une table -->
+        <div class="reserve-button">
+            <a href="{% url 'tables_app:calendar' %}" class="btn">
+                Je veux réserver une table
+            </a>
         </div>
 
     </div>

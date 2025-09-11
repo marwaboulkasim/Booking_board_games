@@ -317,3 +317,221 @@ footer {
         width: 100%;
     }
 }
+
+
+
+
+/* ===== PAGE CALENDRIER ===== */
+.calendar-page {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Animation d’apparition douce */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== TITRES ===== */
+.calendar-page h1 {
+    font-size: 2rem;
+    color: #2c3e50;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    border-bottom: 3px solid #007bff;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+/* ===== FORMULAIRE DE DATE ===== */
+.calendar-page form input[type="date"] {
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    padding: 6px 10px;
+    transition: all 0.3s ease;
+}
+
+.calendar-page form input[type="date"]:focus {
+    outline: none;
+    border-color: #0056b3;
+    box-shadow: 0 0 5px rgba(0,123,255,0.6);
+}
+
+/* ===== CARTES DES TABLES ===== */
+.card {
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.card-title {
+    font-size: 1.2rem;
+    color: #007bff;
+    font-weight: 600;
+}
+
+/* ===== LISTE DES CRÉNEAUX ===== */
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.95rem;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+/* ===== BADGES (ÉTAT) ===== */
+.badge {
+    font-size: 0.8rem;
+    padding: 0.5em 0.8em;
+    border-radius: 12px;
+}
+
+/* ===== BOUTON RÉSERVER ===== */
+.reserve-btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.reserve-btn:hover {
+    transform: scale(1.05);
+}
+
+/* ===== TABLEAU MES RÉSERVATIONS ===== */
+table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+thead tr {
+    background: linear-gradient(45deg, #007bff, #00bcd4);
+    color: white;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+tbody tr:hover {
+    background-color: #f9f9f9;
+    transition: background 0.3s ease;
+}
+
+td, th {
+    padding: 12px;
+}
+
+/* ===== MODAL RÉSERVATION ===== */
+.modal-content {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.modal-header {
+    background: linear-gradient(45deg, #007bff, #00bcd4);
+    color: white;
+}
+
+.modal-footer button {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+/* ===== MESSAGE "AUCUNE RÉSERVATION" ===== */
+.text-muted {
+    font-style: italic;
+    font-size: 0.95rem;
+}
+
+
+
+
+
+
+/* ==============================
+   game.html / game_detail.html Thibaud DEBUT
+============================== */
+
+/* Bouton retour acceuil */
+.back-home {
+    margin: 20px 0;
+    text-align: right;
+}
+
+/* Vu en détail des jeux */
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+    justify-items: center; /* centre chaque carte dans sa colonne */
+}
+
+.game-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%; /* prend toute la largeur disponible dans la colonne */
+    max-width: 200px; /* largeur maximale de la carte */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.game-card img {
+    width: 100%;
+    height: 150px; /* hauteur uniforme */
+    object-fit: cover; /* recadre sans déformer */
+    display: block; /* supprime tout espace blanc sous l'image */
+}
+
+.game-card h3 {
+    margin: 10px 0;
+    text-align: center;
+    font-size: 1em;
+}
+
+.game-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Conteneur global image + texte */
+.game-detail-container {
+    display: flex;
+    align-items: flex-start;   /* aligne en haut */
+    gap: 20px;                 /* espace entre image et texte */
+    flex-wrap: wrap;           /* sur petits écrans, texte passe sous l'image */
+}
+
+/* Conteneur de l'image du détail du jeu */
+.game-image-detail {
+    width: 300px;        /* largeur fixe */
+    margin-bottom: 20px;
+    border-radius: 8px;  /* coins arrondis */
+    overflow: visible;   /* ne plus tronquer l'image */
+}
+
+/* Image */
+.game-image-detail img {
+    width: 100%;         /* occupe toute la largeur du conteneur */
+    height: auto;        /* conserve les proportions */
+    object-fit: contain; /* adapte l'image sans la couper */
+    display: block;
+    border-radius: 8px;  /* coins arrondis sur l'image */
+}
+
+/* Bloc de texte */
+.game-info {
+    flex: 1;  /* prend tout l'espace restant */
+}
+
+/* ==============================
+   game.html / game_detail.html Thibaud FIN
+============================== */
