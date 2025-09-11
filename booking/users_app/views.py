@@ -1,16 +1,23 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
-from django.urls import reverse
+from .forms import CustomUserCreationForm, ProfileForm, PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+#marwa
+from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm
 from tables_app.models import Table, Booking
 import datetime
+from django.contrib import messages
 from django.urls import reverse
-from django.contrib.auth.models import User
-from tables_app.models import Customer, Table, Booking
+from django.contrib.auth import get_user_model
+from tables_app.models import Table, Booking
+import random
+import string
+
+
+User = get_user_model()
 
 
 def home(request):
@@ -45,6 +52,30 @@ def logout_view(request):
     logout(request)
     return redirect('tables_app:home')
 
+
+
+@login_required
+def profile_view(request):
+    user = request.user
+    if request.method == "POST":
+        form = ProfileForm(request.POST, instance=user)
+        password_form = PasswordChangeForm(user, request.POST)
+        if form.is_valid() and password_form.is_valid():
+            form.save()
+            password_form.save()
+            update_session_auth_hash(request, password_form.user)
+            return redirect('users_app:profile')
+    else:
+        form = ProfileForm(instance=user)
+        password_form = PasswordChangeForm(user)
+    return render(request, 'users_app/profile.html', {
+        'form': form,
+        'password_form': password_form
+    })
+    return redirect('tables_app:calendar')
+
+
+
 # --- Création d'une réservation (privée ou publique) ---@login_required
 
 @login_required
@@ -52,17 +83,7 @@ def create_booking(request, table_id):
     table = get_object_or_404(Table, id=table_id)
 
     # Récupérer le Customer correspondant au User connecté
-    try:
-        customer = Customer.objects.get(email=request.user.email)
-    except Customer.DoesNotExist:
-        # Crée un Customer minimal si aucun trouvé
-        customer = Customer.objects.create(
-            pseudo=request.user.username,
-            email=request.user.email,
-            first_name=getattr(request.user, 'first_name', ''),
-            last_name=getattr(request.user, 'last_name', ''),
-            password=''  # Placeholder, pas utilisé
-        )
+    customer = request.user
 
     if request.method == "POST":
         date_str = request.POST.get("date")

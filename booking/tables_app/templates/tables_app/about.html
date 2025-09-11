@@ -3,7 +3,7 @@
 {% block title %}À propos{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="about-container">
     <h1>À propos</h1>
 
     <p>
@@ -38,5 +38,7 @@
     <p>
         Ce projet a été développé dans le cadre de notre formation en développement web avec <strong>Django</strong>.
     </p>
+
+    <a href="{% url 'tables_app:home' %}" class="btn">Retour à l'accueil</a>
 </div>
 {% endblock %}

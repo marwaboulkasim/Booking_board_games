@@ -10,6 +10,7 @@ urlpatterns = [
     path("games/", views.games, name="games"),
     path("games/<int:game_id>/", views.game_detail, name="game_detail"),
     path('booking-confirmation/<int:booking_id>/', views.booking_confirmation, name='booking_confirmation'),
+    
 
 
     

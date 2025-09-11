@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
 
 # Enum pour l'état des tables
 class TableEtat(models.TextChoices):
@@ -28,18 +29,7 @@ class Game(models.Model):
         return self.name_game
 
 
-# Customer
-class Customer(models.Model):
-    last_name = models.CharField(max_length=50)
-    first_name = models.CharField(max_length=50)
-    pseudo = models.CharField(max_length=50, unique=True)
-    phone = models.CharField(max_length=20)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=128)
-    fav_game = models.ManyToManyField("Game", blank=True, related_name='fans')  # top 3 jeux préférés
 
-    def __str__(self):
-        return self.pseudo
 
 
 # Tables
@@ -63,7 +53,7 @@ class Booking(models.Model):
     duration = models.DurationField(help_text="Durée (HH:MM:SS)")
     booking_type = models.CharField(max_length=10, choices=BookingType.choices)
     table = models.ForeignKey("Table", on_delete=models.CASCADE)
-    main_customer = models.ForeignKey("Customer", on_delete=models.CASCADE, related_name='bookings')
+    main_customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bookings')
 
     def __str__(self):
         return f"{self.main_customer.pseudo} - Table {self.table.number_table} le {self.date}"
