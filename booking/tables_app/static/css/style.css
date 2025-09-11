@@ -380,7 +380,7 @@ footer {
 .game-info {
     flex: 1;  /* prend tout l'espace restant */
 }
-.reserve-btn {
+/* .reserve-btn {
     background-color: #4CAF50;
     color: white;
     padding: 5px 10px;
@@ -391,7 +391,7 @@ footer {
 
 .reserve-btn:hover {
     background-color: #45a049;
-}
+} */
 /* === Reservation Card === */
 .calendar-page .reservation-card {
     background: #ffffff;
@@ -477,3 +477,25 @@ footer {
         top: auto;
     }
 }
+
+
+.reserve-button {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.btn-reserve {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #1abc9c; /* même vert que .btn-home */
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-reserve:hover {
+    background-color: #16a085; /* un vert légèrement plus foncé au survol */
+}
+
