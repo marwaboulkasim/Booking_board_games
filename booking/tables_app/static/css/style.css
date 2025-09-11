@@ -1,92 +1,39 @@
-/* Reset */
+/* ==============================
+   RESET & GLOBAL
+============================== */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f4f0; /* nude clair */
+    color: #4b3f35; /* brun foncé */
     margin: 0;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .container {
-    background-color: white;
+    background-color: #fff6f0;
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
     width: 100%;
     max-width: 900px;
     text-align: center;
 }
 
-
-/* Titles */
 h1, h2, h3 {
+    color: #5a4337;
     margin-bottom: 15px;
-    color: #2c3e50;
 }
 
-/* Bouton Accueil */
-.btn-home {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #1abc9c;
-    color: white;
-    font-weight: bold;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-    width: auto !important; /* empêche le width:100% général */
-}
-
-.btn-home:hover {
-    background-color: #16a085;
-}
-
-/* Boutons génériques */
-button, .btn, a.btn {
-    display: inline-block;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    background: #1abc9c;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-    transition: 0.3s;
-    text-decoration: none;
-    width: 100%;
-}
-
-button:hover, .btn:hover, a.btn:hover {
-    background: #16a085;
-}
-
-p {
-    margin-top: 15px;
-    font-size: 14px;
-}
-
-/* Forms */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-input, textarea, select {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-/* Navbar */
+/* ==============================
+   NAVBAR
+============================== */
 nav {
-    background: #2c3e50;
+    background: #7b5e57;
     color: white;
-    padding: 15px;
+    padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -112,70 +59,78 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    color: #1abc9c;
+    color: #d9bba7; /* nude clair */
 }
 
-/* === CALENDAR PAGE === */
-.calendar-page .container {
-    padding: 25px;
-}
-
-.calendar-page h1 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    color: #2c3e50;
-}
-
-.calendar-form {
-    margin: 20px 0 30px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.calendar-form input[type="date"] {
-    padding: 10px 14px;
-    border: 1px solid #dcdde1;
-    border-radius: 8px;
-    font-size: 15px;
-}
-
-.calendar-form button {
-    background: #6c5ce7;
-    color: white;
+/* ==============================
+   BOUTONS
+============================== */
+button, .btn, a.btn {
+    display: inline-block;
     padding: 10px 20px;
-    border-radius: 8px;
     border: none;
+    border-radius: 8px;
+    background: #a37c6e; /* marron nude */
+    color: white;
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
+    text-decoration: none;
 }
 
-.calendar-form button:hover {
-    background: #5a4bcf;
+button:hover, .btn:hover, a.btn:hover {
+    background: #8c5f4e;
     transform: scale(1.05);
 }
 
-/* Table list */
-.tables-list {
+/* ==============================
+   FORMULAIRES
+============================== */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+input, textarea, select {
+    padding: 10px;
+    border: 1px solid #d8cfc5;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: #fff6f0;
+    color: #4b3f35;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #a37c6e;
+    outline: none;
+    box-shadow: 0 0 5px rgba(163,124,110,0.3);
+}
+
+/* ==============================
+   CALENDAR PAGE
+============================== */
+.calendar-page h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+ul.tables-list {
     list-style: none;
     padding: 0;
-    margin: 0 auto;
     max-width: 600px;
-    text-align: left;
+    margin: 0 auto;
 }
 
 .tables-list li {
-    background: #ffffff;
+    background: #fff6f0;
     margin: 12px 0;
     padding: 15px 20px;
     border-radius: 10px;
-    font-size: 16px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     transition: 0.3s;
 }
 
@@ -185,119 +140,103 @@ nav ul li a:hover {
 }
 
 .tables-list .free {
-    color: #27ae60;
+    color: #6b8e23; /* vert foncé pour libre */
     font-weight: bold;
 }
 
 .tables-list .reserved {
-    color: #e74c3c;
+    color: #d2691e; /* brun pour réservé */
     font-weight: bold;
 }
 
-/* Réserver */
 .reserve-btn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 5px 10px;
-    margin-left: 10px;
-    text-decoration: none;
-    border-radius: 4px;
+    background-color: #a37c6e;
 }
 
 .reserve-btn:hover {
-    background-color: #45a049;
+    background-color: #8c5f4e;
 }
 
-/* Reservation Card */
-.calendar-page .reservation-card {
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 25px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    transition: transform 0.3s, box-shadow 0.3s;
+/* ==============================
+   BOOKING CONFIRMATION
+============================== */
+.confirmation-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px 25px;
+    background-color: #fff6f0;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    text-align: center;
 }
 
-.calendar-page .reservation-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+.confirmation-container h1 {
+    font-size: 2rem;
+    color: #6b8e23; /* vert succès */
+    margin-bottom: 20px;
 }
 
-/* Form title */
-.calendar-page .reservation-card h5,
-.calendar-page .reservation-card label {
-    color: #34495e;
-    font-weight: 600;
+.confirmation-container p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
 }
 
-/* Inputs & Select */
-.calendar-page .reservation-card .form-control,
-.calendar-page .reservation-card .form-select {
-    border-radius: 10px;
-    border: 1px solid #dcdde1;
-    padding: 10px 12px;
-    font-size: 15px;
-    transition: border 0.2s, box-shadow 0.2s;
+.confirmation-container ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
 }
 
-.calendar-page .reservation-card .form-control:focus,
-.calendar-page .reservation-card .form-select:focus {
-    border-color: #6c5ce7;
-    box-shadow: 0 0 5px rgba(108,92,231,0.3);
-    outline: none;
+.confirmation-container ul li {
+    font-size: 1rem;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0d8cf;
 }
 
-/* Buttons inside card */
-.calendar-page .reservation-card button[type="submit"] {
-    background-color: #6c5ce7;
+.confirmation-container ul li:last-child {
+    border-bottom: none;
 }
 
-.calendar-page .reservation-card button[type="submit"]:hover {
-    background-color: #5a4bcf;
-    transform: scale(1.03);
+.confirmation-container a.btn {
+    background-color: #a37c6e;
+    color: white;
 }
 
-.calendar-page .reservation-card .btn-secondary {
-    background-color: #dcdde1;
-    color: #34495e;
+.confirmation-container a.btn:hover {
+    background-color: #8c5f4e;
 }
 
-.calendar-page .reservation-card .btn-secondary:hover {
-    background-color: #cfd1d8;
-    transform: scale(1.03);
+/* Code privé */
+.confirmation-container p strong {
+    color: #d2691e; /* brun pour le code */
 }
 
-/* Footer */
+/* ==============================
+   FOOTER
+============================== */
 footer {
     text-align: center;
-    margin-top: 30px;
     padding: 15px;
-    background: #2c3e50;
+    margin-top: 30px;
+    background: #7b5e57;
     color: white;
     border-radius: 8px;
 }
 
-/* Mobile responsive */
+/* ==============================
+   RESPONSIVE
+============================== */
 @media (max-width: 768px) {
-    .calendar-page .reservation-card {
-        margin-top: 20px;
-        position: relative;
-        top: auto;
+    body, .container {
+        padding: 15px;
     }
 
-    .calendar-page .d-flex,
-    .calendar-form {
+    .tables-list li {
         flex-direction: column;
-        gap: 10px;
+        align-items: flex-start;
     }
 
-    .calendar-page .btn {
-        width: 100%; /* les boutons Réserver prennent toute la largeur */
-    }
-
-    .btn-home {
-        width: auto; /* Accueil garde sa taille normale */
+    button, .btn, a.btn {
+        width: 100%;
     }
 }

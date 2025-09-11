@@ -1,15 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, logout
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from .forms import CustomUserCreationForm
-from tables_app.models import Table, Booking
-import datetime
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse
-from django.contrib.auth.models import User
+from .forms import CustomUserCreationForm
 from tables_app.models import Customer, Table, Booking
+import datetime
+import random
+import string
 
-
+# --- Accueil ---
 def home(request):
     return render(request, "home.html")
 
@@ -42,24 +42,21 @@ def logout_view(request):
     logout(request)
     return redirect('tables_app:home')
 
-# --- Création d'une réservation (privée ou publique) ---@login_required
-
+# --- Création d'une réservation (privée uniquement) ---
 @login_required
 def create_booking(request, table_id):
     table = get_object_or_404(Table, id=table_id)
 
-    # Récupérer le Customer correspondant au User connecté
-    try:
-        customer = Customer.objects.get(email=request.user.email)
-    except Customer.DoesNotExist:
-        # Crée un Customer minimal si aucun trouvé
-        customer = Customer.objects.create(
-            pseudo=request.user.username,
-            email=request.user.email,
-            first_name=getattr(request.user, 'first_name', ''),
-            last_name=getattr(request.user, 'last_name', ''),
-            password=''  # Placeholder, pas utilisé
-        )
+    # Récupérer ou créer le Customer correspondant au User connecté
+    customer, _ = Customer.objects.get_or_create(
+        email=request.user.email,
+        defaults={
+            'pseudo': request.user.username,
+            'first_name': getattr(request.user, 'first_name', ''),
+            'last_name': getattr(request.user, 'last_name', ''),
+            'password': ''
+        }
+    )
 
     if request.method == "POST":
         date_str = request.POST.get("date")
@@ -83,12 +80,17 @@ def create_booking(request, table_id):
             booking_type=booking_type
         )
 
+        # Si réservation privée, générer un code unique
+        if booking.booking_type == "privée":
+            booking.code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+            booking.save()
+
         # Redirection vers page de confirmation
-        return redirect(reverse("tables_app:booking_confirmation", args=[booking.id]))
+        return redirect(reverse("users_app:booking_confirmation", args=[booking.id]))
 
     return redirect('tables_app:calendar')
 
-# --- Confirmation de réservation ---
+# --- Page de confirmation ---
 @login_required
 def booking_confirmation(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)

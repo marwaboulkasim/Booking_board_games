@@ -1,8 +1,7 @@
-
-# Début Thibaud
-
 from django.db import models
 from django.utils import timezone
+import string
+import random
 
 # Enum pour l'état des tables
 class TableEtat(models.TextChoices):
@@ -15,8 +14,7 @@ class BookingType(models.TextChoices):
     PRIVEE = 'privée', 'Privée'
     PUBLIQUE = 'publique', 'Publique'
 
-
-# Games
+# Game
 class Game(models.Model):
     name_game = models.CharField(max_length=100)
     category_game = models.CharField(max_length=50)
@@ -28,7 +26,6 @@ class Game(models.Model):
     def __str__(self):
         return self.name_game
 
-
 # Customer
 class Customer(models.Model):
     last_name = models.CharField(max_length=50)
@@ -37,13 +34,12 @@ class Customer(models.Model):
     phone = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=128)
-    fav_game = models.ManyToManyField("Game", blank=True, related_name='fans')  # top 3 jeux préférés
+    fav_game = models.ManyToManyField("Game", blank=True, related_name='fans')
 
     def __str__(self):
         return self.pseudo
 
-
-# Tables
+# Table
 class Table(models.Model):
     number_table = models.IntegerField(unique=True)
     capacity_table = models.IntegerField()
@@ -55,8 +51,7 @@ class Table(models.Model):
     def __str__(self):
         return f"Table {self.number_table} - {self.state_table}"
 
-
-# Booking / Réservation
+# Booking
 class Booking(models.Model):
     date = models.DateField(default=timezone.now)
     start_time = models.TimeField()
@@ -64,10 +59,8 @@ class Booking(models.Model):
     booking_type = models.CharField(max_length=10, choices=BookingType.choices)
     table = models.ForeignKey("Table", on_delete=models.CASCADE)
     main_customer = models.ForeignKey("Customer", on_delete=models.CASCADE, related_name='bookings')
+    
+    code = models.CharField(max_length=6, null=True, blank=True)  # <-- ajouté pour le code de réservation
 
     def __str__(self):
         return f"{self.main_customer.pseudo} - Table {self.table.number_table} le {self.date}"
-
-
-
-# Fin Thibaud
