@@ -44,7 +44,7 @@ class ProfileForm(UserChangeForm):
     
     class Meta:
         model = User
-        fields = ['username', 'pseudo', 'first_name', 'last_name', 'phone', 'favorite_games'] # rajouter received_notifications une fois la fonction créée
+        fields = ['email', 'pseudo', 'first_name', 'last_name', 'phone', 'favorite_games'] # rajouter received_notifications une fois la fonction créée
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

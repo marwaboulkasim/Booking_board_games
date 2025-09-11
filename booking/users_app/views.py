@@ -52,22 +52,31 @@ def logout_view(request):
 @login_required
 def profile_view(request):
     user = request.user
+    
     if request.method == "POST":
-        form = ProfileForm(request.POST, instance=user)
-        password_form = PasswordChangeForm(user, request.POST)
-        if form.is_valid() and password_form.is_valid():
-            form.save()
-            password_form.save()
-            update_session_auth_hash(request, password_form.user)
-            return redirect('users_app:profile')
+        if 'old_password' in request.POST:  # => formulaire mot de passe
+            password_form = PasswordChangeForm(user, request.POST)
+            if password_form.is_valid():
+                password_form.save()
+                update_session_auth_hash(request, password_form.user)
+                messages.success(request, "Mot de passe mis à jour.")
+                return redirect('users_app:profile')
+            profile_form = ProfileForm(instance=user)  # on réaffiche les infos
+        else:  # => formulaire profil
+            profile_form = ProfileForm(request.POST, instance=user)
+            if profile_form.is_valid():
+                profile_form.save()
+                messages.success(request, "Profil mis à jour.")
+                return redirect('users_app:profile')
+            password_form = PasswordChangeForm(user)  # vide
     else:
-        form = ProfileForm(instance=user)
+        profile_form = ProfileForm(instance=user)
         password_form = PasswordChangeForm(user)
+
     return render(request, 'users_app/profile.html', {
-        'form': form,
+        'form': profile_form,
         'password_form': password_form
     })
-    return redirect('tables_app:calendar')
 
 @login_required
 def create_booking(request, table_id):
