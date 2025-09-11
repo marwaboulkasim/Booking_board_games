@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Modifier une réservation{% endblock %}
+
+{% block content %}
+<h1>Modifier la réservation</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <fieldset>
+        <legend>Informations générales</legend>
+        <p>
+            {{ form.date.label_tag }}<br>
+            {{ form.date }}
+            {{ form.date.errors }}
+        </p>
+        <p>
+            {{ form.start_time.label_tag }}<br>
+            {{ form.start_time }}
+            {{ form.start_time.errors }}
+        </p>
+        <p>
+            {{ form.duration.label_tag }}<br>
+            {{ form.duration }}
+            {{ form.duration.errors }}
+        </p>
+        <p>
+            {{ form.booking_type.label_tag }}<br>
+            {{ form.booking_type }}
+            {{ form.booking_type.errors }}
+        </p>
+        <p>
+            {{ form.table.label_tag }}<br>
+            {{ form.table }}
+            {{ form.table.errors }}
+        </p>
+        <p>
+            {{ form.main_customer.label_tag }}<br>
+            {{ form.main_customer }}
+            {{ form.main_customer.errors }}
+        </p>
+        {% if form.code %}
+        <p>
+            {{ form.code.label_tag }}<br>
+            {{ form.code }}
+            {{ form.code.errors }}
+        </p>
+        {% endif %}
+    </fieldset>
+
+    {% if form.instance.booking_type == "PUBLIQUE" %}
+        <fieldset>
+            <legend>Participants</legend>
+            {% if form.instance.participants.all %}
+                <ul>
+                    {% for participant in form.instance.participants.all %}
+                        <li>
+                            {{ participant.user.pseudo }}
+                            <!-- Exemple : lien pour retirer un participant -->
+                            <a href="{% url 'remove_participant' participant.id %}" class="text-red-500">❌</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Aucun participant pour le moment.</p>
+            {% endif %}
+            <p>
+                Nombre maximum de joueurs : {{ form.instance.max_players }}
+            </p>
+        </fieldset>
+    {% endif %}
+
+    <button type="submit">Enregistrer</button>
+    <a href="{% url 'bookings_list' %}">Annuler</a>
+</form>
+{% endblock %}

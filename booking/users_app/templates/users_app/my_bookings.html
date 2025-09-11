@@ -1,0 +1,13 @@
+<h2>Mes Réservations</h2>
+<ul>
+  {% for b in bookings %}
+    <li>
+      Table {{ b.table.number_table }} le {{ b.date }} à {{ b.start_time }}
+      ({{ b.booking_type }})
+      <a href="{% url 'users_app:edit_booking' b.id %}">Modifier</a>
+      <a href="{% url 'users_app:delete_booking' b.id %}">Annuler</a>
+    </li>
+  {% empty %}
+    <li>Aucune réservation.</li>
+  {% endfor %}
+</ul>

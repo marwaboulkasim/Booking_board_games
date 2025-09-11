@@ -13,6 +13,9 @@ urlpatterns = [
     #path('create-booking/<int:table_id>/', views.create_booking, name='create_private_booking_user'),#marwa
     path('create-booking/<int:table_id>/', views.create_booking, name='create_booking'),
     path("confirmation/<int:booking_id>/", views.booking_confirmation, name="booking_confirmation"),
+    path('my_bookings/', views.my_booking_view, name='my_bookings'),
+    path('booking/edit/<int:booking_id>/', views.edit_booking_view, name='edit_booking'),
+    path('booking/delete/<int:booking_id>/', views.delete_booking_view, name='delete_booking'),
 ]
 
 

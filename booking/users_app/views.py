@@ -53,7 +53,7 @@ def logout_view(request):
     return redirect('tables_app:home')
 
 
-
+# --- Gestion profil user ---#
 @login_required
 def profile_view(request):
     user = request.user
@@ -133,3 +133,34 @@ def create_booking(request, table_id):
 def booking_confirmation(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
     return render(request, "tables_app/booking_confirmation.html", {"booking": booking})
+
+# --- Page gestion des réservations (User) --- #
+
+@login_required
+def my_booking_view(request):
+    bookings = Booking.objects.filter(main_customer=request.user)
+    return render(request, 'users_app/my_bookings.html', {'bookings': bookings})
+
+# --- Modification de réservation --- #
+@login_required
+def edit_booking_view(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, main_customer=request.user)
+    
+    if request.method == 'POST':
+        booking.date = request.POST.get('date')
+        booking.start_time = request.POST.get('start_time')
+        booking.duration = request.POST.get('duration')
+        booking.booking_type = request.POST.get('booking_type')
+        booking.save()
+        messages.success(request, 'Votre réservation a été modifiée avec succès !')
+        return redirect('users_app:my_bookings')
+    return render(request, 'users_app/edit_booking.html', {'booking': booking})
+
+# --- Suppression de réservation --- #
+
+@login_required
+def delete_booking_view(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, main_customer=request.user)
+    booking.delete()
+    messages.success(request, "Votre réservation a été annulée.")
+    return redirect('users_app:my_bookings')
