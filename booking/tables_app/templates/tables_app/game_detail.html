@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ game.name_game }} - Booking Game</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+
+        <!-- Bouton retour -->
+        <div class="back-home">
+            <a href="{% url 'tables_app:games' %}" class="btn-home">Retour aux jeux</a>
+        </div>
+
+        <h1>{{ game.name_game }}</h1>
+
+        <!-- Conteneur global image + texte -->
+        <div class="game-detail-container">
+
+            <!-- Image du jeu -->
+            {% if game.image_url %}
+                <div class="game-image-detail">
+                    <img src="{{ game.image_url }}" alt="{{ game.name_game }}">
+                </div>
+            {% endif %}
+
+            <!-- Informations du jeu -->
+            <div class="game-info">
+                <p><strong>Catégorie :</strong> {{ game.category_game }}</p>
+                <p><strong>Nombre de joueurs :</strong> {{ game.nb_player_min_game }} - {{ game.nb_player_max_game }}</p>
+                <p><strong>Disponibilité :</strong> {{ game.availability_game|yesno:"Disponible,Indisponible" }}</p>
+                <p><strong>Durée d'une partie :</strong> {{ game.duration_game }}</p>
+                {% if game.presentation %}
+                    <p><strong>Présentation :</strong> {{ game.presentation }}</p>
+                {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+</body>
+</html>

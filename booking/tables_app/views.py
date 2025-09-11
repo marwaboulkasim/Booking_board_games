@@ -1,8 +1,6 @@
-from django.shortcuts import render
-from .models import Table, Booking
+from django.shortcuts import render, get_object_or_404
+from .models import Table, Booking, BookingType
 import datetime
-from django.shortcuts import render, redirect, get_object_or_404
-
 
 # --- Accueil ---
 def home_view(request):
@@ -42,18 +40,59 @@ def calendar_view(request):
         'date': selected_date,
         'tables': tables_state,
     })
-
-# confirmation marwa a l'instant
+# --- Confirmation de réservation ---#
 def booking_confirmation(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
     return render(request, "tables_app/booking_confirmation.html", {
         "booking": booking
     })
 
-#fin
+# --- Nos jeux disponibles ---
+from django.shortcuts import render, get_object_or_404
+from tables_app.models import Game
+
+def games(request):
+    # Récupérer les filtres GET
+    category = request.GET.get("category")
+    players = request.GET.get("players")
+    max_players = request.GET.get("max_players")
+    duration = request.GET.get("duration")
+
+    # Base queryset
+    games = Game.objects.all()
+
+    # Appliquer les filtres existants
+    if category:
+        games = games.filter(category_game=category)
+    if players:
+        games = games.filter(nb_player_min_game__lte=int(players))
+    
+    # Nouveaux filtres
+    if max_players:
+        games = games.filter(nb_player_max_game__gte=int(max_players))
+    if duration:
+        games = games.filter(duration_game__icontains=duration)
+
+    # Options dynamiques pour le formulaire
+    categories = Game.objects.values_list("category_game", flat=True).distinct()
+    player_options = sorted(Game.objects.values_list("nb_player_min_game", flat=True).distinct())
+    max_player_options = sorted(Game.objects.values_list("nb_player_max_game", flat=True).distinct())
+    duration_options = Game.objects.values_list("duration_game", flat=True).distinct()
+
+    context = {
+        "games": games,
+        "categories": categories,
+        "player_options": player_options,
+        "max_player_options": max_player_options,
+        "duration_options": duration_options,
+    }
+
+    return render(request, "tables_app/game.html", context)
 
 
-
+def game_detail(request, game_id):
+    game = get_object_or_404(Game, id=game_id)
+    return render(request, "tables_app/game_detail.html", {"game": game})
 
 # --- Pages supplémentaires ---
 def about_view(request):

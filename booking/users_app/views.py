@@ -1,15 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse
 from .forms import CustomUserCreationForm
-from tables_app.models import Customer, Table, Booking
+from tables_app.models import Table, Booking
 import datetime
-import random
-import string
+from django.urls import reverse
+from django.contrib.auth.models import User
+from tables_app.models import Customer, Table, Booking
 
-# --- Accueil ---
+
 def home(request):
     return render(request, "home.html")
 
@@ -20,10 +23,10 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('tables_app:calendar')
+            return redirect('tables_app:home')
     else:
         form = CustomUserCreationForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'users_app/register.html', {'form': form})
 
 # --- Connexion ---
 def login_view(request):
@@ -35,28 +38,31 @@ def login_view(request):
             return redirect('tables_app:home')
     else:
         form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'users_app/login.html', {'form': form})
 
 # --- Déconnexion ---
 def logout_view(request):
     logout(request)
     return redirect('tables_app:home')
 
-# --- Création d'une réservation (privée uniquement) ---
+# --- Création d'une réservation (privée ou publique) ---@login_required
+
 @login_required
 def create_booking(request, table_id):
     table = get_object_or_404(Table, id=table_id)
 
-    # Récupérer ou créer le Customer correspondant au User connecté
-    customer, _ = Customer.objects.get_or_create(
-        email=request.user.email,
-        defaults={
-            'pseudo': request.user.username,
-            'first_name': getattr(request.user, 'first_name', ''),
-            'last_name': getattr(request.user, 'last_name', ''),
-            'password': ''
-        }
-    )
+    # Récupérer le Customer correspondant au User connecté
+    try:
+        customer = Customer.objects.get(email=request.user.email)
+    except Customer.DoesNotExist:
+        # Crée un Customer minimal si aucun trouvé
+        customer = Customer.objects.create(
+            pseudo=request.user.username,
+            email=request.user.email,
+            first_name=getattr(request.user, 'first_name', ''),
+            last_name=getattr(request.user, 'last_name', ''),
+            password=''  # Placeholder, pas utilisé
+        )
 
     if request.method == "POST":
         date_str = request.POST.get("date")
@@ -64,9 +70,20 @@ def create_booking(request, table_id):
         duration_str = request.POST.get("duration")
         booking_type = request.POST.get("booking_type")
 
-        # Conversion des chaînes en objets Python
-        date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+        # --- Conversion de la date ---
+        try:
+            date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+        except ValueError:
+            try:
+                date = datetime.datetime.strptime(date_str, "%b. %d, %Y").date()
+            except ValueError:
+                messages.error(request, "Format de date invalide.")
+                return redirect("tables_app:calendar")
+
+        # --- Conversion de l'heure de début ---
         start_time = datetime.datetime.strptime(start_time_str, "%H:%M").time()
+
+        # --- Conversion de la durée ---
         h, m, s = map(int, duration_str.split(":"))
         duration = datetime.timedelta(hours=h, minutes=m, seconds=s)
 
@@ -77,7 +94,7 @@ def create_booking(request, table_id):
             date=date,
             start_time=start_time,
             duration=duration,
-            booking_type=booking_type
+            booking_type=booking_type,
         )
 
         # Si réservation privée, générer un code unique

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}Message envoyé{% endblock %}
+
+{% block content %}
+<h1>Merci pour votre message !</h1>
+<p>Nous avons bien reçu votre demande, nous vous répondrons dès que possible.</p>
+
+<a href="{% url 'contact_app:contact' %}">Retour au formulaire</a>
+{% endblock %}
