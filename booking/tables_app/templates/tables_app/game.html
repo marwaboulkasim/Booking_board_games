@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Nos Jeux - Booking Game</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+
+        <!-- Bouton retour -->
+        <div class="back-home">
+            <a href="{% url 'tables_app:home' %}" class="btn-home">Retour à l'accueil</a>
+        </div>
+
+        <h1>🎲 Nos Jeux Disponibles</h1>
+
+        <!-- Formulaire de filtre -->
+        <form method="get" action="{% url 'tables_app:games' %}" class="filter-form">
+            <label for="category">Catégorie :</label>
+            <select name="category" id="category">
+                <option value="">-- Toutes --</option>
+                {% for category in categories %}
+                    <option value="{{ category }}" {% if request.GET.category == category %}selected{% endif %}>{{ category }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="players">Nombre minimum de joueurs :</label>
+            <select name="players" id="players">
+                <option value="">-- Tous --</option>
+                {% for nb in player_options %}
+                    <option value="{{ nb }}" {% if request.GET.players == nb|stringformat:"s" %}selected{% endif %}>{{ nb }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="max_players">Nombre maximum de joueurs :</label>
+            <select name="max_players" id="max_players">
+                <option value="">-- Tous --</option>
+                {% for nb in max_player_options %}
+                    <option value="{{ nb }}" {% if request.GET.max_players == nb|stringformat:"s" %}selected{% endif %}>{{ nb }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Filtrer</button>
+        </form>
+
+        <hr>
+
+        <!-- Liste des jeux -->
+        {% if games %}
+            <div class="games-grid">
+                {% for game in games %}
+                    <a href="{% url 'tables_app:game_detail' game.id %}" class="game-card">
+                        <div class="game-image">
+                            <img src="{{ game.image_url }}" alt="{{ game.name_game }}">
+                        </div>
+                        <h3>{{ game.name_game }}</h3>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Aucun jeu ne correspond à vos critères.</p>
+        {% endif %}
+
+    </div>
+</body>
+</html>
+

@@ -14,11 +14,11 @@
             <p>Vous êtes connecté en tant que <strong>{{ user.username }}</strong>.</p>
             <nav class="menu">
                 <ul>
-                    <li><a>Qui sommes-nous ?</a></li>
-                    <li><a>Nos jeux disponibles</a></li>
+                    <li><a href="{% url 'tables_app:about' %}">Qui sommes-nous ?</a></li>
+                    <li><a href="{% url 'tables_app:games' %}">Nos jeux disponibles</a></li>
                     <li><a href="{% url 'tables_app:calendar' %}">Réserver une table</a></li>
-                    <li><a>Nous contacter</a></li>
-                    <li><a>Gérer mon compte</a></li>
+                    <li><a href="{% url 'contact_app:contact' %}">Nous contacter</a></li>
+                    <li><a href="{% url 'users_app:profile' %}">Gérer mon compte</a></li>
                     <li><a href="{% url 'users_app:logout' %}">Déconnexion</a></li>
                 </ul>
             </nav>

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+
+
+{% block title %}Contact{% endblock %}
+
+{% block content %}
+<h1>Contactez-nous</h1>
+<div class="container">
+    <p>
+        Un problème avec votre réservation ? </br> Des difficultés à réserver une table ? </br> Ou simplement des questions ? </br>
+        Notre équipe fera de son mieux pour vous répondre dans les meilleurs délais.
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Envoyer</button>
+    </form>
+</div>
+
+{% endblock %}

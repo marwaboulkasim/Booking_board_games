@@ -26,7 +26,7 @@ Ce projet a été réalisé dans le cadre de notre formation en développement w
 ---
 
 ##  Structure du projet
-
+```
 Booking_board_games/
 │── booking/ # Configuration principale Django
 │── tables_app/ # Application pour la gestion des tables
@@ -35,7 +35,7 @@ Booking_board_games/
 │── templates/ # Templates globaux (base.html, etc.)
 │── README.md # Ce fichier
 │── requirements.txt # Dépendances du projet
-
+```
 ---
 
 ##  Installation & lancement
@@ -45,17 +45,20 @@ Booking_board_games/
    git https://github.com/marwaboulkasim/Booking_board_games.git
    cd Booking_board_games
 2. **Créer un environnement virtuel** :
-   ```python -m venv .venv
+
+   ```
+   python -m venv .venv
 source .venv/bin/activate   # sous Linux / Mac
 .venv\Scripts\activate      # sous Windows
+```
 3. **Installer les dépendances** :
-pip install -r requirements.txt
+```pip install -r requirements.txt```
 
 4. **Lancer les migrations** :
-python manage.py migrate
+```python manage.py migrate```
 
 5. **Démarrer le serveur** :
-python manage.py runserver
+```python manage.py runserver```
 
 6. **Accéder à l'application en local** :
 http://127.0.0.1:8000

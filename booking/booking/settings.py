@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
      'tables_app',  # ton app doit être listée ici
      'users_app', # create user_app marwa
+     'contact_app', # app pour la page de contact
      
 ]
 
@@ -132,6 +133,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # auth User Marwa
 AUTH_USER_MODEL = 'users_app.User'
 
-STATICFILES_DIRS = [BASE_DIR / "static"] #marwa
+
+# STATICFILES_DIRS = [BASE_DIR / "static"] #marwa
+
+
+# Lecture des images (pour chaque jeu)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+STATICFILES_DIRS = []
+
 
 
