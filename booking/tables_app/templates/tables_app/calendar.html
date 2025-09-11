@@ -4,12 +4,17 @@
 {% block title %}Calendrier{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-4 calendar-page">
+    <!-- Bouton Accueil -->
+    <div class="mb-3 text-start">
+        <a href="/" class="btn btn-secondary btn-sm">🏠 Accueil</a>
+    </div>
+
     <h1>📅 Calendrier du {{ date }}</h1>
 
     <!-- Formulaire pour choisir une date -->
-    <form method="get" action="{% url 'tables_app:calendar' %}" class="mb-3 d-flex align-items-center gap-2">
-        <input type="date" id="date" name="date" value="{{ date }}" class="form-control w-auto" required>
+    <form method="get" action="{% url 'tables_app:calendar' %}" class="mb-3 d-flex align-items-center gap-2 flex-wrap">
+        <input type="date" id="date" name="date" value="{{ date|date:'Y-m-d' }}" class="form-control w-auto">
         <button type="submit" class="btn btn-primary btn-sm">Voir</button>
     </form>
 
@@ -24,10 +29,10 @@
                     {{ t.state }}
                 </span>
 
-                {% if t.state == 'Libre' or t.state == 'libre' %}
+                {% if t.state == 'Libre' %}
                     <button class="btn btn-primary btn-sm reserve-btn"
                         data-table-id="{{ t.table.id }}"
-                        data-date="{{ date }}">
+                        data-date="{{ date|date:'Y-m-d' }}">
                         Réserver
                     </button>
                 {% endif %}
@@ -50,7 +55,7 @@
         </div>
         <div class="modal-body">
             <input type="hidden" id="table_id" name="table_id">
-            <input type="hidden" id="date_input" name="date">
+            <input type="hidden" id="date_input" name="date" value="{{ date|date:'Y-m-d' }}">
 
             <div class="mb-3">
                 <label for="booking_type" class="form-label">Type :</label>
@@ -79,6 +84,7 @@
   </div>
 </div>
 
+{% block extra_js %}
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const bookingForm = document.getElementById("bookingForm");
@@ -100,4 +106,5 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
+{% endblock %}
 {% endblock %}

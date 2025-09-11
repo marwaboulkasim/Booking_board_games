@@ -10,6 +10,10 @@ from .forms import CustomUserCreationForm
 from tables_app.models import Table, Booking
 import datetime
 from django.contrib import messages
+from django.urls import reverse
+from django.contrib.auth.models import User
+from tables_app.models import Customer, Table, Booking
+
 
 def home(request):
     return render(request, "home.html")
@@ -64,10 +68,22 @@ def profile_view(request):
     })
     return redirect('tables_app:calendar')
 
-# --- Création d'une réservation (privée ou publique) ---
 @login_required
 def create_booking(request, table_id):
     table = get_object_or_404(Table, id=table_id)
+
+    # Récupérer le Customer correspondant au User connecté
+    try:
+        customer = Customer.objects.get(email=request.user.email)
+    except Customer.DoesNotExist:
+        # Crée un Customer minimal si aucun trouvé
+        customer = Customer.objects.create(
+            pseudo=request.user.username,
+            email=request.user.email,
+            first_name=getattr(request.user, 'first_name', ''),
+            last_name=getattr(request.user, 'last_name', ''),
+            password=''  # Placeholder, pas utilisé
+        )
 
     if request.method == "POST":
         date_str = request.POST.get("date")
@@ -92,15 +108,23 @@ def create_booking(request, table_id):
         h, m, s = map(int, duration_str.split(":"))
         duration = datetime.timedelta(hours=h, minutes=m, seconds=s)
 
-        # --- Création de la réservation ---
-        Booking.objects.create(
+        # Création de la réservation
+        booking = Booking.objects.create(
             table=table,
-            main_customer=request.user,
+            main_customer=customer,
             date=date,
             start_time=start_time,
             duration=duration,
             booking_type=booking_type,
         )
 
-    return redirect("tables_app:calendar")
+        # Redirection vers page de confirmation
+        return redirect(reverse("tables_app:booking_confirmation", args=[booking.id]))
 
+    return redirect('tables_app:calendar')
+
+# --- Confirmation de réservation ---
+@login_required
+def booking_confirmation(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    return render(request, "tables_app/booking_confirmation.html", {"booking": booking})
