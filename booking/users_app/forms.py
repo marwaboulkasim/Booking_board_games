@@ -22,7 +22,14 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'pseudo', 'password1', 'password2']
-
+        
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.pseudo = self.cleaned_data['pseudo']
+        if commit:
+            user.save()
+        return user
+    
 # --- Gestion Profil Utilisateur --- #
 
 class ProfileForm(UserChangeForm):
@@ -38,7 +45,11 @@ class ProfileForm(UserChangeForm):
     class Meta:
         model = User
         fields = ['username', 'pseudo', 'first_name', 'last_name', 'phone', 'favorite_games'] # rajouter received_notifications une fois la fonction créée
-    
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['favorite_games'].queryset = Game.objects.all()
+         
     def clean_favorite_games(self):
         games = self.cleaned_data.get('favorite_games')
         if len(games) > 3:
