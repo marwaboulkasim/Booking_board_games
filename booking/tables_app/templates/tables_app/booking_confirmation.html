@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Confirmation{% endblock %}
+
+{% block content %}
+<div class="confirmation-container">
+    <h1>✅ Réservation confirmée !</h1>
+
+<p>Merci <strong>{{ booking.main_customer.pseudo }}</strong>, votre réservation est bien enregistrée.</p>
+
+    <ul>
+        <li><strong>Table :</strong> {{ booking.table.number_table }}</li>
+        <li><strong>Date :</strong> {{ booking.date }}</li>
+        <li><strong>Heure de début :</strong> {{ booking.start_time }}</li>
+        <li><strong>Durée :</strong> {{ booking.duration }}</li>
+        <li><strong>Type :</strong> {{ booking.get_booking_type_display }}</li>
+    </ul>
+
+    <a href="{% url 'tables_app:calendar' %}?date={{ booking.date }}" class="btn btn-primary">↩ Retour au calendrier</a>
+</div>
+{% endblock %}

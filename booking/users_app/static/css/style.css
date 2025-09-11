@@ -1,0 +1,128 @@
+/* ------------------- Global ------------------- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+h1, h2 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+/* ------------------- Header ------------------- */
+header {
+    background-color: #343a40;
+    color: #fff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+header nav a {
+    color: #ffc107;
+    text-decoration: none;
+    margin-left: 1rem;
+}
+
+header nav a:hover {
+    text-decoration: underline;
+}
+
+/* ------------------- Container ------------------- */
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* ------------------- Formulaire ------------------- */
+form input[type="date"], form input[type="time"], form input[type="text"], form select {
+    max-width: 200px;
+}
+
+.btn-sm {
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-sm:hover {
+    transform: scale(1.05);
+}
+
+/* ------------------- Liste des tables ------------------- */
+.list-group-item {
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    background-color: #fff;
+}
+
+.list-group-item:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Badges */
+.badge {
+    font-size: 0.9rem;
+    padding: 0.5em 0.7em;
+}
+
+/* Libre = vert, Réservée = orange */
+.bg-success {
+    background-color: #28a745 !important;
+}
+
+.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529;
+}
+
+/* Boutons réserver */
+.reserve-btn {
+    border-radius: 0.5rem;
+    font-weight: 500;
+}
+
+/* ------------------- Modal ------------------- */
+.modal-content {
+    border-radius: 0.75rem;
+    padding: 1rem;
+}
+
+.modal-header {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.modal-footer {
+    border-top: none;
+    padding-top: 0;
+}
+
+.modal .form-control, 
+.modal .form-select {
+    border-radius: 0.5rem;
+}
+
+/* ------------------- Responsive ------------------- */
+@media (max-width: 576px) {
+    .list-group-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .reserve-btn {
+        margin-top: 0.5rem;
+    }
+}
+

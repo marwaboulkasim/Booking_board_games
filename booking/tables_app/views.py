@@ -1,7 +1,72 @@
-# tables_app/views.py
 from django.shortcuts import render
+from .models import Table, Booking
+import datetime
+from django.shortcuts import render, redirect, get_object_or_404
 
-def home(request):
+
+# --- Accueil ---
+def home_view(request):
     return render(request, 'tables_app/home.html')
 
+# --- Calendrier ---
+def calendar_view(request):
+    # Lecture de la date depuis l'URL (?date=YYYY-MM-DD)
+    date_str = request.GET.get('date')
+    if date_str:
+        try:
+            selected_date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
+        except ValueError:
+            selected_date = datetime.date.today()
+    else:
+        selected_date = datetime.date.today()
+    
+    # Récupérer toutes les réservations pour le jour sélectionné
+    reservations = Booking.objects.filter(date=selected_date).select_related('table')
+    
+    # Construction de l'état des tables
+    tables_state = []
+    for table in Table.objects.all():
+        # Vérifie si une réservation existe pour cette table
+        res = reservations.filter(table=table).first()
+        if res:
+            state = res.booking_type  # "privée" ou "publique"
+        else:
+            state = 'Libre'
+        tables_state.append({'table': table, 'state': state})
 
+    # Debug : affiche la liste des tables avec leur état
+    print(tables_state)
+
+    # Rendu du template
+    return render(request, 'tables_app/calendar.html', {
+        'date': selected_date,
+        'tables': tables_state,
+    })
+
+# confirmation marwa a l'instant
+def booking_confirmation(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    return render(request, "tables_app/booking_confirmation.html", {
+        "booking": booking
+    })
+
+#fin
+
+
+
+
+# --- Pages supplémentaires ---
+def about_view(request):
+    return render(request, 'tables_app/about.html')
+
+def games_view(request):
+    return render(request, 'tables_app/games.html')
+
+def book_table_view(request):
+    return render(request, 'tables_app/book_table.html')
+
+def contact_view(request):
+    return render(request, 'tables_app:contact.html')
+
+def account_view(request):
+    return render(request, 'tables_app/account.html')

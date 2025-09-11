@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Calendrier{% endblock %}
+
+{% block content %}
+<div class="container mt-4 calendar-page">
+    <!-- Bouton Accueil -->
+    <div class="mb-3 text-start">
+        <a href="/" class="btn btn-secondary btn-sm">🏠 Accueil</a>
+    </div>
+
+    <h1>📅 Calendrier du {{ date }}</h1>
+
+    <!-- Formulaire pour choisir une date -->
+    <form method="get" action="{% url 'tables_app:calendar' %}" class="mb-3 d-flex align-items-center gap-2 flex-wrap">
+        <input type="date" id="date" name="date" value="{{ date|date:'Y-m-d' }}" class="form-control w-auto">
+        <button type="submit" class="btn btn-primary btn-sm">Voir</button>
+    </form>
+
+    <hr>
+
+    <!-- État des tables -->
+    <ul class="list-group">
+        {% for t in tables %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Table <strong>{{ t.table.number_table }}</strong> —
+                <span class="badge {% if t.state == 'Libre' %}bg-success{% else %}bg-warning{% endif %}">
+                    {{ t.state }}
+                </span>
+
+                {% if t.state == 'Libre' %}
+                    <button class="btn btn-primary btn-sm reserve-btn"
+                        data-table-id="{{ t.table.id }}"
+                        data-date="{{ date|date:'Y-m-d' }}">
+                        Réserver
+                    </button>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li class="list-group-item">Aucune table pour ce jour.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Modal Bootstrap -->
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="bookingForm" method="POST" action="">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">Réserver une table</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="table_id" name="table_id">
+            <input type="hidden" id="date_input" name="date" value="{{ date|date:'Y-m-d' }}">
+
+            <div class="mb-3">
+                <label for="booking_type" class="form-label">Type :</label>
+                <select class="form-select" id="booking_type" name="booking_type">
+                    <option value="privée">Privée</option>
+                    <option value="publique">Publique</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="start_time" class="form-label">Heure :</label>
+                <input type="time" class="form-control" id="start_time" name="start_time" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="duration" class="form-label">Durée (HH:MM:SS) :</label>
+                <input type="text" class="form-control" id="duration" name="duration" value="01:00:00" required>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Confirmer</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const bookingForm = document.getElementById("bookingForm");
+    const bookingModalEl = document.getElementById('bookingModal');
+    const bookingModal = new bootstrap.Modal(bookingModalEl);
+
+    document.querySelectorAll(".reserve-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const tableId = btn.dataset.tableId;
+            const date = btn.dataset.date;
+
+            document.getElementById("table_id").value = tableId;
+            document.getElementById("date_input").value = date;
+
+            bookingForm.action = `/users/create-booking/${tableId}/`;
+
+            bookingModal.show();
+        });
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

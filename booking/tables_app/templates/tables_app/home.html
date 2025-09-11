@@ -1,15 +1,30 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>Booking Game</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'tables_app/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1>Bienvenue sur Booking Game !</h1>
-    <button>Cliquer ici</button>
+    <div class="container">
+        <h1>Bienvenue sur Booking Game 🎲</h1>
 
-    <script src="{% static 'tables_app/js/script.js' %}"></script>
+        {% if user.is_authenticated %}
+            <p>Vous êtes connecté en tant que <strong>{{ user.username }}</strong>.</p>
+            <nav class="menu">
+                <ul>
+                    <li><a>Qui sommes-nous ?</a></li>
+                    <li><a>Nos jeux disponibles</a></li>
+                    <li><a href="{% url 'tables_app:calendar' %}">Réserver une table</a></li>
+                    <li><a>Nous contacter</a></li>
+                    <li><a>Gérer mon compte</a></li>
+                    <li><a href="{% url 'users_app:logout' %}">Déconnexion</a></li>
+                </ul>
+            </nav>
+        {% else %}
+            <p>Veuillez vous <a href="{% url 'users_app:login' %}">connecter</a> ou vous <a href="{% url 'users_app:register' %}">inscrire</a>.</p>
+        {% endif %}
+    </div>
 </body>
 </html>
