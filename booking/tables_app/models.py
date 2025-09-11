@@ -1,6 +1,9 @@
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+import random
+import string
+
 
 # Enum pour l'état des tables
 class TableEtat(models.TextChoices):
@@ -54,6 +57,13 @@ class Booking(models.Model):
     booking_type = models.CharField(max_length=10, choices=BookingType.choices)
     table = models.ForeignKey("Table", on_delete=models.CASCADE)
     main_customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bookings')
+    code = models.CharField(max_length=10, blank=True, null=True)  # ajout du code
+
+    def save(self, *args, **kwargs):
+        # Générer un code uniquement si réservation privée et pas déjà présent
+        if self.booking_type == BookingType.PRIVEE and not self.code:
+            self.code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.main_customer.pseudo} - Table {self.table.number_table} le {self.date}"

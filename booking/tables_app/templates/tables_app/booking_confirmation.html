@@ -17,9 +17,9 @@
         <li><strong>Type :</strong> {{ booking.get_booking_type_display }}</li>
     </ul>
 
-    {% if booking.booking_type == "privée" %}
-        <p>Code privé pour votre réservation : <strong>{{ booking.code }}</strong></p>
-    {% endif %}
+{% if booking.booking_type == "privée" %}
+    <p>Code privé pour votre réservation : <strong>{{ booking.code }}</strong></p>
+{% endif %}
 
     <a href="{% url 'tables_app:calendar' %}?date={{ booking.date }}" class="btn btn-primary"> Retour au calendrier</a>
 </div>
