@@ -1,28 +1,42 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %}Mes réservations{% endblock %}
+
 {% block content %}
 <h1>Mes réservations</h1>
 
 {% if bookings %}
-<table>
-  <tr>
-    <th>Date</th><th>Heure</th><th>Durée</th><th>Table</th><th>Type</th><th>Actions</th>
-  </tr>
-  {% for b in bookings %}
-  <tr>
-    <td>{{ b.date }}</td>
-    <td>{{ b.start_time }}</td>
-    <td>{{ b.duration }}</td>
-    <td>{{ b.table.number_table }}</td>
-    <td>{{ b.booking_type }}</td>
-    <td>
-      <a href="{% url 'users_app:edit_booking' b.id %}">✏️ Modifier</a> |
-      <a href="{% url 'users_app:delete_booking' b.id %}">🗑 Supprimer</a>
-    </td>
-  </tr>
-  {% endfor %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Créneau</th>
+            <th>Table</th>
+            <th>Type</th>
+            <th>Code</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for booking in bookings %}
+        <tr>
+            <td>{{ booking.date|date:"d/m/Y" }}</td>
+            <td>{{ booking.start_time|time:"H:i" }} ({{ booking.duration }})</td>
+            <td>{{ booking.table.number_table }}</td>
+            <td>{{ booking.booking_type|title }}</td>
+            <td>{% if booking.code %}{{ booking.code }}{% else %}-{% endif %}</td>
+            <td>
+                <a href="{% url 'users_app:edit_booking' booking.id %}" class="btn btn-sm btn-primary">Modifier</a>
+                <a href="{% url 'users_app:delete_booking' booking.id %}" class="btn btn-sm btn-danger"
+                   onclick="return confirm('Supprimer cette réservation ?');">Supprimer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 {% else %}
-<p>Vous n'avez pas encore de réservation.</p>
+<p>Vous n'avez aucune réservation pour le moment.</p>
 {% endif %}
+
 {% endblock %}

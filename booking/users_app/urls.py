@@ -13,9 +13,10 @@ urlpatterns = [
     #path('create-booking/<int:table_id>/', views.create_booking, name='create_private_booking_user'),#marwa
     path('create-booking/<int:table_id>/', views.create_booking, name='create_booking'),
     path("confirmation/<int:booking_id>/", views.booking_confirmation, name="booking_confirmation"),
-    path("my-bookings/", views.my_booking_view, name="my_bookings"),
-    path("my-bookings/<int:booking_id>/edit/", views.edit_booking_view, name="edit_booking"),
-    path("my-bookings/<int:booking_id>/delete/", views.delete_booking_view, name="delete_booking"),
-    ]
+    path("my-bookings/", views.my_bookings, name="my_bookings"),
+    path("my-bookings/<int:booking_id>/edit/", views.edit_booking, name="edit_booking"),
+    path("my-bookings/<int:booking_id>/delete/", views.delete_booking, name="delete_booking"),
+
+]
 
 

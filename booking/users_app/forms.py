@@ -56,15 +56,33 @@ class ProfileForm(UserChangeForm):
             raise forms.ValidationError('Vous ne pouvez choisir que 3 jeux max.')
         return games
 
-# --- Edition de réservation --- #
+# --- Gestion des réservations (User)  ---
 
 class EditBookingForm(forms.ModelForm):
+    slot_label = forms.ChoiceField(
+        choices=[
+            ("14h-18h", "14h-18h"),
+            ("18h-20h", "18h-20h"),
+            ("20h-00h", "20h-00h"),
+        ],
+        label="Créneau horaire"
+    )
+
     class Meta:
         model = Booking
-        fields = ["date", "start_time", "duration", "booking_type", 'table']
-        widgets = {
-            "date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
-            "start_time": forms.TimeInput(attrs={"type": "time", "class": "form-control"}),
-            "duration": forms.TextInput(attrs={"placeholder": "01:00:00", "class": "form-control"}),
-            "booking_type": forms.Select(attrs={"class": "form-select"}),
+        fields = ["date", "booking_type", "table"]
+
+    def save(self, commit=True):
+        booking = super().save(commit=False)
+        from datetime import time, timedelta
+        slots = {
+            "14h-18h": (time(14, 0), time(18, 0)),
+            "18h-20h": (time(18, 0), time(20, 0)),
+            "20h-00h": (time(20, 0), time(23, 59)),
         }
+        start, end = slots[self.cleaned_data['slot_label']]
+        booking.start_time = start
+        booking.duration = timedelta(hours=end.hour - start.hour, minutes=end.minute - start.minute)
+        if commit:
+            booking.save()
+        return booking
