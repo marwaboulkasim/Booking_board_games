@@ -4,26 +4,25 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm, ProfileForm, PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-#marwa
-from django.contrib.auth.decorators import login_required
-from .forms import CustomUserCreationForm
 from tables_app.models import Table, Booking
 from users_app.forms import EditBookingForm
 import datetime
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.urls import reverse
+from datetime import datetime, timedelta
 import random
 import string
+from django.contrib.auth import get_user_model
+from django.contrib import messages
 
 
-User = get_user_model()
-
-
+# --- HOME ---
 def home(request):
     return render(request, "home.html")
 
-# --- Enregistrement ---
+# --- REGISTER ---
 def register_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -35,7 +34,7 @@ def register_view(request):
         form = CustomUserCreationForm()
     return render(request, 'users_app/register.html', {'form': form})
 
-# --- Connexion ---
+# --- LOGIN ---
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
@@ -47,7 +46,7 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'users_app/login.html', {'form': form})
 
-# --- Déconnexion ---
+# --- LOGOUT ---
 def logout_view(request):
     logout(request)
     return redirect('tables_app:home')
@@ -57,78 +56,113 @@ def logout_view(request):
 @login_required
 def profile_view(request):
     user = request.user
+
     if request.method == "POST":
-        form = ProfileForm(request.POST, instance=user)
-        password_form = PasswordChangeForm(user, request.POST)
-        if form.is_valid() and password_form.is_valid():
-            form.save()
-            password_form.save()
-            update_session_auth_hash(request, password_form.user)
-            return redirect('users_app:profile')
+        if "update_profile" in request.POST:  # bouton infos perso
+            form = ProfileForm(request.POST, instance=user)
+            password_form = PasswordChangeForm(user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Profil mis à jour avec succès ✅")
+                return redirect('users_app:profile')
+
+        elif "update_password" in request.POST:  # bouton mot de passe
+            form = ProfileForm(instance=user)
+            password_form = PasswordChangeForm(user, request.POST)
+            if password_form.is_valid():
+                user = password_form.save()
+                update_session_auth_hash(request, user)  # évite la déconnexion
+                messages.success(request, "Mot de passe changé avec succès 🔑")
+                return redirect('users_app:profile')
+
     else:
         form = ProfileForm(instance=user)
         password_form = PasswordChangeForm(user)
+
     return render(request, 'users_app/profile.html', {
         'form': form,
         'password_form': password_form
     })
-    return redirect('tables_app:calendar')
 
+import uuid
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from tables_app.models import Table, Booking
+import datetime
 
-
-# --- Création d'une réservation (privée ou publique) ---@login_required
+# Créneaux disponibles
+TIME_SLOTS = {
+    "14h-18h": (datetime.time(14, 0), datetime.time(18, 0)),
+    "18h-20h": (datetime.time(18, 0), datetime.time(20, 0)),
+    "20h-00h": (datetime.time(20, 0), datetime.time(0, 0)),  # minuit
+}
 
 @login_required
 def create_booking(request, table_id):
     table = get_object_or_404(Table, id=table_id)
 
-    # Récupérer le Customer correspondant au User connecté
-    customer = request.user
-
     if request.method == "POST":
         date_str = request.POST.get("date")
-        start_time_str = request.POST.get("start_time")
-        duration_str = request.POST.get("duration")
+        slot_label = request.POST.get("slot_label")
         booking_type = request.POST.get("booking_type")
 
-        # --- Conversion de la date ---
+        if not date_str or not slot_label or slot_label not in TIME_SLOTS:
+            return redirect("tables_app:calendar")
+
+        # Convertir la date
         try:
-            date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+            selected_date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
         except ValueError:
-            try:
-                date = datetime.datetime.strptime(date_str, "%b. %d, %Y").date()
-            except ValueError:
-                messages.error(request, "Format de date invalide.")
-                return redirect("tables_app:calendar")
+            selected_date = timezone.localdate()
 
-        # --- Conversion de l'heure de début ---
-        start_time = datetime.datetime.strptime(start_time_str, "%H:%M").time()
+        start_time, end_time = TIME_SLOTS[slot_label]
 
-        # --- Conversion de la durée ---
-        h, m, s = map(int, duration_str.split(":"))
-        duration = datetime.timedelta(hours=h, minutes=m, seconds=s)
+        # Durée
+        if end_time == datetime.time(0, 0):
+            end_dt = datetime.datetime.combine(selected_date + datetime.timedelta(days=1), end_time)
+        else:
+            end_dt = datetime.datetime.combine(selected_date, end_time)
+        start_dt = datetime.datetime.combine(selected_date, start_time)
+        duration = end_dt - start_dt
+
+        # Vérification du chevauchement
+        overlapping = Booking.objects.filter(
+            table=table,
+            date=selected_date,
+            start_time__lt=end_dt.time(),
+        ).exclude(
+            start_time__gte=end_dt.time()
+        )
+
+        if overlapping.exists():
+            return render(request, "users_app/booking_error.html", {
+                "message": f"Le créneau {slot_label} est déjà réservé pour cette table."
+            })
+
+        # Génération du code uniquement si réservation privée
+        booking_code = None
+        if booking_type == "privée":
+            booking_code = str(uuid.uuid4())[:8]  # Exemple : code unique court
 
         # Création de la réservation
         booking = Booking.objects.create(
             table=table,
-            main_customer=customer,
-            date=date,
+            main_customer=request.user,
+            date=selected_date,
             start_time=start_time,
             duration=duration,
             booking_type=booking_type,
+            code=booking_code,  # ← ajouté
         )
 
-        # Si réservation privée, générer un code unique
-        if booking.booking_type == "privée":
-            booking.code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-            booking.save()
+        return redirect("tables_app:booking_confirmation", booking_id=booking.id)
 
-        # Redirection vers page de confirmation
-        return redirect(reverse("users_app:booking_confirmation", args=[booking.id]))
+    return redirect("tables_app:calendar")
 
-    return redirect('tables_app:calendar')
 
-# --- Page de confirmation ---
+
+# --- BOOKING CONFIRMATION ---
 @login_required
 def booking_confirmation(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
