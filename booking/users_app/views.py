@@ -9,9 +9,8 @@ from users_app.forms import EditBookingForm
 import datetime
 from django.contrib import messages
 from django.urls import reverse
-from django.contrib.auth import get_user_model
-from django.urls import reverse
 from datetime import datetime, timedelta
+from django.contrib.auth import get_user_model
 import random
 import string
 from django.contrib.auth import get_user_model
@@ -53,6 +52,7 @@ def logout_view(request):
 
 
 # --- Gestion profil user ---#
+# --- PROFILE ---
 @login_required
 def profile_view(request):
     user = request.user
