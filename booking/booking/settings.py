@@ -40,6 +40,7 @@ INSTALLED_APPS = [
      'tables_app',  # ton app doit être listée ici
      'users_app', # create user_app marwa
      'contact_app', # app pour la page de contact
+     "admin_app", #admin marwa
      
 ]
 
@@ -141,6 +142,7 @@ AUTH_USER_MODEL = 'users_app.User'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 STATICFILES_DIRS = []
+
 
 
 
