@@ -11,7 +11,7 @@ import random
 import string
 from django.contrib.auth import get_user_model
 from django.contrib import messages
-
+from datetime import datetime, time, timedelta
 
 # --- HOME ---
 def home(request):
@@ -95,62 +95,64 @@ TIME_SLOTS = {
 @login_required
 def create_booking(request, table_id):
     table = get_object_or_404(Table, id=table_id)
+    customer = request.user
 
     if request.method == "POST":
         date_str = request.POST.get("date")
         slot_label = request.POST.get("slot_label")
         booking_type = request.POST.get("booking_type")
 
-        if not date_str or not slot_label or slot_label not in TIME_SLOTS:
-            return redirect("tables_app:calendar")
-
-        # Convertir la date
+        # --- Conversion de la date ---
         try:
             selected_date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
         except ValueError:
-            selected_date = timezone.localdate()
+            messages.error(request, "Format de date invalide.")
+            return redirect("tables_app:calendar")
 
-        start_time, end_time = TIME_SLOTS[slot_label]
+        # --- Définition des créneaux horaires ---
+        slots = {
+            "14h-18h": (time(14, 0), time(18, 0)),
+            "18h-20h": (time(18, 0), time(20, 0)),
+            "20h-00h": (time(20, 0), time(23, 59)),
+        }
 
-        # Durée
-        if end_time == datetime.time(0, 0):
-            end_dt = datetime.datetime.combine(selected_date + datetime.timedelta(days=1), end_time)
-        else:
-            end_dt = datetime.datetime.combine(selected_date, end_time)
-        start_dt = datetime.datetime.combine(selected_date, start_time)
-        duration = end_dt - start_dt
+        if slot_label not in slots:
+            messages.error(request, "Créneau invalide.")
+            return redirect("tables_app:calendar")
 
-        # Vérification du chevauchement
-        overlapping = Booking.objects.filter(
+        start_time, end_time = slots[slot_label]
+
+        # --- Vérification des conflits ---
+        conflicts = Booking.objects.filter(
             table=table,
             date=selected_date,
-            start_time__lt=end_dt.time(),
-        ).exclude(
-            start_time__gte=end_dt.time()
+            start_time__lt=end_time,
+            start_time__gte=start_time
         )
 
-        if overlapping.exists():
-            return render(request, "users_app/booking_error.html", {
-                "message": f"Le créneau {slot_label} est déjà réservé pour cette table."
-            })
+        if conflicts.exists():
+            messages.error(request, f"Le créneau {slot_label} est déjà réservé pour cette table.")
+            return redirect("tables_app:calendar")
 
-        # Génération du code uniquement si réservation privée
-        booking_code = None
-        if booking_type == "privée":
-            booking_code = str(uuid.uuid4())[:8]  # Exemple : code unique court
-
-        # Création de la réservation
+        # --- Création de la réservation ---
         booking = Booking.objects.create(
             table=table,
-            main_customer=request.user,
+            main_customer=customer,
             date=selected_date,
             start_time=start_time,
-            duration=duration,
-            booking_type=booking_type,
-            code=booking_code,  # ← ajouté
+            duration=datetime.timedelta(
+                hours=(end_time.hour - start_time.hour),
+                minutes=(end_time.minute - start_time.minute)
+            ),
+            booking_type=booking_type
         )
 
-        return redirect("tables_app:booking_confirmation", booking_id=booking.id)
+        # Si réservation privée, générer un code unique
+        if booking.booking_type == "privée":
+            booking.code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+            booking.save()
+
+        return redirect(reverse("users_app:booking_confirmation", args=[booking.id]))
 
     return redirect("tables_app:calendar")
 
