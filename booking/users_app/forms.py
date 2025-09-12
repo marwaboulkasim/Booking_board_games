@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth import get_user_model
-from tables_app.models import Game
+from tables_app.models import Game, Booking
 
 User = get_user_model()
 
@@ -56,3 +56,33 @@ class ProfileForm(UserChangeForm):
             raise forms.ValidationError('Vous ne pouvez choisir que 3 jeux max.')
         return games
 
+# --- Gestion des réservations (User)  ---
+
+class EditBookingForm(forms.ModelForm):
+    slot_label = forms.ChoiceField(
+        choices=[
+            ("14h-18h", "14h-18h"),
+            ("18h-20h", "18h-20h"),
+            ("20h-00h", "20h-00h"),
+        ],
+        label="Créneau horaire"
+    )
+
+    class Meta:
+        model = Booking
+        fields = ["date", "booking_type", "table"]
+
+    def save(self, commit=True):
+        booking = super().save(commit=False)
+        from datetime import time, timedelta
+        slots = {
+            "14h-18h": (time(14, 0), time(18, 0)),
+            "18h-20h": (time(18, 0), time(20, 0)),
+            "20h-00h": (time(20, 0), time(23, 59)),
+        }
+        start, end = slots[self.cleaned_data['slot_label']]
+        booking.start_time = start
+        booking.duration = timedelta(hours=end.hour - start.hour, minutes=end.minute - start.minute)
+        if commit:
+            booking.save()
+        return booking

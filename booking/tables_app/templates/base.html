@@ -11,16 +11,11 @@
 </head>
 <body>
     <header class="mb-4">
-        <h1></h1>
         <nav>
             {% if user.is_authenticated %}
-                <span>Connecté : {{ user.username }}</span>
-                
-                <a href="{% url 'tables_app:home' %}" class="btn">Accueil</a>
-                
-                <a href="{% url 'tables_app:calendar' %}" class="btn">Réserver</a>
-                <a href="{% url 'contact_app:contact' %}" class="btn">Contact</a>
-                <a href="{% url 'users_app:logout' %}">Se déconnecter</a>
+            <div class="mb-3 text-start">
+                <a href="/" class="btn btn-outline-secondary btn-sm shadow-sm">🏠 Accueil</a>
+            </div>
             {% else %}
                 <a href="{% url 'users_app:login' %}">Connexion</a> |
                 <a href="{% url 'users_app:register' %}">Inscription</a>

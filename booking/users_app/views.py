@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import CustomUserCreationForm, ProfileForm, PasswordChangeForm
+from .forms import CustomUserCreationForm, ProfileForm, PasswordChangeForm, EditBookingForm
 from django.contrib.auth import update_session_auth_hash
 from tables_app.models import Table, Booking
 from django.urls import reverse
@@ -163,3 +163,35 @@ def create_booking(request, table_id):
 def booking_confirmation(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
     return render(request, "tables_app/booking_confirmation.html", {"booking": booking})
+
+
+# --- MES RESERVATIONS ---
+@login_required
+def my_bookings(request):
+    bookings = Booking.objects.filter(main_customer=request.user).select_related('table')
+    return render(request, "users_app/my_bookings.html", {"bookings": bookings})
+
+# --- MODIFICATION DES RESERVATIONS --- 
+@login_required
+def edit_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, main_customer=request.user)
+
+    if request.method == "POST":
+        form = EditBookingForm(request.POST, instance=booking)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Réservation mise à jour ✅")
+            return redirect("users_app:my_bookings")
+    else:
+        form = EditBookingForm(instance=booking)
+
+    return render(request, "users_app/edit_booking.html", {"form": form, "booking": booking})
+
+# --- ANNULATION DES RESERVATIONS --- 
+
+@login_required
+def delete_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, main_customer=request.user)
+    booking.delete()
+    messages.success(request, "Réservation supprimée 🗑️")
+    return redirect("users_app:my_bookings")
