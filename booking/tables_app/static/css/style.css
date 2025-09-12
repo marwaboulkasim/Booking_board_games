@@ -535,3 +535,161 @@ td, th {
 /* ==============================
    game.html / game_detail.html Thibaud FIN
 ============================== */
+
+
+
+
+/* admin_app/static/admin_app/css/style.css */
+
+
+/* --- Header --- */
+header {
+    background-color: #1a73e8;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+header nav a {
+    color: white;
+    margin-left: 15px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+header nav a:hover {
+    text-decoration: underline;
+}
+
+/* --- Cards --- */
+.card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    font-weight: 600;
+    font-size: 1.2rem;
+    background-color: #1a73e8;
+    color: white;
+    border-radius: 10px 10px 0 0;
+    padding: 10px 15px;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+/* --- Tables --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+}
+
+table th {
+    background-color: #1a73e8;
+    color: white;
+    font-weight: 600;
+}
+
+table tr:nth-child(even) {
+    background-color: #f0f4f8;
+}
+
+table tr:hover {
+    background-color: #e3f2fd;
+}
+
+/* --- Badges --- */
+.badge {
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+.bg-success {
+    background-color: #28a745 !important;
+}
+
+.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529;
+}
+
+/* --- Buttons --- */
+.btn {
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background-color: #1a73e8;
+    border-color: #1a73e8;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #1669c1;
+    border-color: #1669c1;
+}
+
+.btn-outline-primary {
+    border-color: #1a73e8;
+    color: #1a73e8;
+}
+
+.btn-outline-primary:hover {
+    background-color: #1a73e8;
+    color: white;
+}
+
+.btn-outline-secondary {
+    border-color: #6c757d;
+    color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 10px;
+    }
+
+    table th, table td {
+        padding: 8px;
+    }
+}

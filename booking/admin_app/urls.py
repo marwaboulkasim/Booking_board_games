@@ -8,5 +8,7 @@ urlpatterns = [
     path("reservations/", views.manage_reservations, name="manage_reservations"),
     path("users/", views.manage_users, name="manage_users"),
     path("games/", views.manage_games, name="manage_games"),
+    path("users/add/", views.add_user, name="add_user"),  # 👈 ici
+
 
 ]
