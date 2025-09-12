@@ -17,6 +17,7 @@ ENV/
 *.pot
 *.pyc
 media/
+db.sqlite3
 staticfiles/
 
 --- IDE/OS ---
