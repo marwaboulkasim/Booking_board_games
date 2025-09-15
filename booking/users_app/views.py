@@ -10,12 +10,11 @@ import datetime
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from datetime import datetime, timedelta
+import datetime
 import random
 import string
 from django.contrib.auth import get_user_model
 from django.contrib import messages
-from datetime import datetime, time, timedelta
 
 # --- HOME ---
 def home(request):
@@ -58,7 +57,7 @@ def profile_view(request):
     user = request.user
 
     if request.method == "POST":
-        if "update_profile" in request.POST:  # bouton infos perso
+        if "update_profile" in request.POST:
             form = ProfileForm(request.POST, instance=user)
             password_form = PasswordChangeForm(user)
             if form.is_valid():
@@ -66,12 +65,12 @@ def profile_view(request):
                 messages.success(request, "Profil mis à jour avec succès ✅")
                 return redirect('users_app:profile')
 
-        elif "update_password" in request.POST:  # bouton mot de passe
+        elif "update_password" in request.POST:
             form = ProfileForm(instance=user)
             password_form = PasswordChangeForm(user, request.POST)
             if password_form.is_valid():
                 user = password_form.save()
-                update_session_auth_hash(request, user)  # évite la déconnexion
+                update_session_auth_hash(request, user)
                 messages.success(request, "Mot de passe changé avec succès 🔑")
                 return redirect('users_app:profile')
 
@@ -84,20 +83,15 @@ def profile_view(request):
         'password_form': password_form
     })
 
-import uuid
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.utils import timezone
-from tables_app.models import Table, Booking
-import datetime
-
-# Créneaux disponibles
+# --- Créneaux disponibles ---
 TIME_SLOTS = {
     "14h-18h": (datetime.time(14, 0), datetime.time(18, 0)),
     "18h-20h": (datetime.time(18, 0), datetime.time(20, 0)),
-    "20h-00h": (datetime.time(20, 0), datetime.time(0, 0)),  # minuit
+    "20h-00h": (datetime.time(20, 0), datetime.time(0, 0)),
+
 }
 
+#################### Créer une réservation ####################
 @login_required
 def create_booking(request, table_id):
     table = get_object_or_404(Table, id=table_id)
@@ -108,6 +102,11 @@ def create_booking(request, table_id):
         slot_label = request.POST.get("slot_label")
         booking_type = request.POST.get("booking_type")
 
+        # --- Nouveaux champs pour le choix de jeu ---
+        booking_choice = request.POST.get("booking_choice")  # "our_game" / "custom" / None
+        game_id = request.POST.get("game_id")
+        custom_game = request.POST.get("custom_game")
+
         # --- Conversion de la date ---
         try:
             selected_date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
@@ -117,9 +116,10 @@ def create_booking(request, table_id):
 
         # --- Définition des créneaux horaires ---
         slots = {
-            "14h-18h": (time(14, 0), time(18, 0)),
-            "18h-20h": (time(18, 0), time(20, 0)),
-            "20h-00h": (time(20, 0), time(23, 59)),
+                "14h-18h": (datetime.time(14, 0), datetime.time(18, 0)),
+                "18h-20h": (datetime.time(18, 0), datetime.time(20, 0)),
+                "20h-00h": (datetime.time(20, 0), datetime.time(0, 0)),
+
         }
 
         if slot_label not in slots:
@@ -135,13 +135,12 @@ def create_booking(request, table_id):
             start_time__lt=end_time,
             start_time__gte=start_time
         )
-
         if conflicts.exists():
             messages.error(request, f"Le créneau {slot_label} est déjà réservé pour cette table.")
             return redirect("tables_app:calendar")
 
         # --- Création de la réservation ---
-        booking = Booking.objects.create(
+        booking = Booking(
             table=table,
             main_customer=customer,
             date=selected_date,
@@ -153,8 +152,17 @@ def create_booking(request, table_id):
             booking_type=booking_type
         )
 
-        # Si réservation privée, générer un code unique
-        if booking.booking_type == "privée":
+        # 🎲 Gérer le choix du jeu
+        if booking_choice == "our_game" and game_id:
+            booking.game_id = int(game_id)  # conversion en int pour ForeignKey
+        elif booking_choice == "custom" and custom_game:
+            booking.custom_game = custom_game
+
+        # --- Sauvegarde de la réservation ---
+        booking.save()
+
+        # Si réservation privée → générer un code
+        if booking.booking_type == "privée" and not booking.code:
             booking.code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
             booking.save()
 
@@ -162,13 +170,25 @@ def create_booking(request, table_id):
 
     return redirect("tables_app:calendar")
 
-
+#################
 
 # --- BOOKING CONFIRMATION ---
 @login_required
 def booking_confirmation(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
-    return render(request, "tables_app/booking_confirmation.html", {"booking": booking})
+    # Déterminer le jeu réservé
+    if booking.game:  # Jeu du catalogue
+        game_name = booking.game.name_game
+    elif booking.custom_game:  # Jeu apporté par l'utilisateur
+        game_name = booking.custom_game
+    else:
+        game_name = "Aucun"
+
+    return render(request, "tables_app/booking_confirmation.html", {
+        "booking": booking,
+        "game_name": game_name
+    })
+
 
 
 # --- MES RESERVATIONS ---
@@ -201,3 +221,5 @@ def delete_booking(request, booking_id):
     booking.delete()
     messages.success(request, "Réservation supprimée 🗑️")
     return redirect("users_app:my_bookings")
+
+
