@@ -34,6 +34,13 @@
         {{ form.table.errors }}
     </div>
 
+    <div class="mb-3">
+        {{ form.game.label_tag }}
+        {{ form.game }}
+        {{ form.game.errors }}
+    </div>
+
+
     <button type="submit" class="btn btn-primary">Enregistrer</button>
     <a href="{% url 'users_app:my_bookings' %}" class="btn btn-secondary">Annuler</a>
 </form>

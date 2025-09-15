@@ -10,7 +10,7 @@ import datetime
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from datetime import datetime, timedelta, time
+import datetime
 import random
 import string
 from django.contrib.auth import get_user_model
@@ -87,7 +87,8 @@ def profile_view(request):
 TIME_SLOTS = {
     "14h-18h": (datetime.time(14, 0), datetime.time(18, 0)),
     "18h-20h": (datetime.time(18, 0), datetime.time(20, 0)),
-    "20h-00h": (datetime.time(20, 0), datetime.time(0, 0)),  # minuit
+    "20h-00h": (datetime.time(20, 0), datetime.time(0, 0)),
+
 }
 
 #################### Créer une réservation ####################
@@ -115,9 +116,10 @@ def create_booking(request, table_id):
 
         # --- Définition des créneaux horaires ---
         slots = {
-            "14h-18h": (datetime.time(14, 0), datetime.time(18, 0)),
-            "18h-20h": (datetime.time(18, 0), datetime.time(20, 0)),
-            "20h-00h": (datetime.time(20, 0), datetime.time(23, 59)),
+                "14h-18h": (datetime.time(14, 0), datetime.time(18, 0)),
+                "18h-20h": (datetime.time(18, 0), datetime.time(20, 0)),
+                "20h-00h": (datetime.time(20, 0), datetime.time(0, 0)),
+
         }
 
         if slot_label not in slots:

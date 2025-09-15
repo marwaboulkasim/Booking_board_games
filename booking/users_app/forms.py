@@ -70,7 +70,7 @@ class EditBookingForm(forms.ModelForm):
 
     class Meta:
         model = Booking
-        fields = ["date", "booking_type", "table"]
+        fields = ["date", "booking_type", "table", "game"]
 
     def save(self, commit=True):
         booking = super().save(commit=False)
