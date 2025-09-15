@@ -67,3 +67,6 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"{self.main_customer.pseudo} - Table {self.table.number_table} le {self.date}"
+    
+
+    
