@@ -3,42 +3,73 @@
 {% block title %}À propos{% endblock %}
 
 {% block content %}
-<div class="about-container">
-    <h1>À propos</h1>
+<div class="container my-5 about-container">
 
-    <p>
-        Bienvenue sur <strong>Booking Board Games</strong> 🎲  
-        Notre plateforme a été conçue pour simplifier la réservation de tables dans notre salle de jeux de société.
-    </p>
+    <!-- Titre principal -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">À propos de Booking Board Games 🎲</h1>
+        <p class="lead">Réservez facilement vos tables et profitez d’un espace ludique convivial.</p>
+    </div>
 
-    <h2>Notre mission</h2>
-    <p>
-        Offrir un espace convivial où les passionnés de jeux peuvent se retrouver, partager des moments agréables,
-        et découvrir de nouveaux jeux.  
-        Grâce à cette application, vous pouvez réserver une table en quelques clics,
-        choisir votre jeu préféré, et inviter vos amis à rejoindre la partie.
-    </p>
+    <!-- Mission -->
+    <div class="mb-5">
+        <h2 class="fw-bold text-primary mb-3">Notre mission</h2>
+        <p>
+            Offrir un espace convivial où les passionnés de jeux peuvent se retrouver, partager des moments agréables
+            et découvrir de nouveaux jeux.  
+            Grâce à cette plateforme, vous pouvez réserver une table en quelques clics, choisir votre jeu préféré
+            et inviter vos amis à rejoindre la partie.
+        </p>
+    </div>
 
-    <h2>Fonctionnalités principales</h2>
-    <ul>
-        <li>Réserver une table privée ou publique</li>
-        <li>Rejoindre une partie en cours avec un code d’accès</li>
-        <li>Choisir un jeu disponible dans notre ludothèque ou apporter le vôtre</li>
-        <li>Communiquer avec les autres joueurs via un salon textuel</li>
-        <li>Gérer facilement vos réservations (création, annulation)</li>
-    </ul>
+    <!-- Fonctionnalités -->
+    <div class="mb-5">
+        <h2 class="fw-bold text-primary mb-3">Fonctionnalités principales</h2>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Réserver une table privée ou publique</li>
+            <li class="list-group-item">Rejoindre une partie en cours avec un code d’accès</li>
+            <li class="list-group-item">Choisir un jeu disponible dans notre ludothèque ou apporter le vôtre</li>
+            <li class="list-group-item">Communiquer avec les autres joueurs via un salon textuel</li>
+            <li class="list-group-item">Gérer facilement vos réservations (création, annulation)</li>
+        </ul>
+    </div>
 
-    <h2>L’équipe de développement</h2>
-    <ul>
-        <li><strong>Marwa</strong> – Authentification & gestion des utilisateurs</li>
-        <li><strong>Thibaut</strong> – Base de données & gestion des tables</li>
-        <li><strong>Gaëtan</strong> – Réservations & interface calendrier</li>
-    </ul>
+    <!-- Équipe de développement -->
+    <div class="mb-5">
+        <h2 class="fw-bold text-primary mb-3">L’équipe de développement</h2>
+        <div class="row g-4">
+            <div class="col-md-4 text-center">
+                <div class="card shadow-sm h-100 p-3">
+                    <h5 class="fw-bold">Marwa</h5>
+                    <p class="mb-0">Auth, gestion des utilisateurs & Réservation</p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="card shadow-sm h-100 p-3">
+                    <h5 class="fw-bold">Thibaut</h5>
+                    <p class="mb-0">Base de données & gestion des tables</p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="card shadow-sm h-100 p-3">
+                    <h5 class="fw-bold">Gaëtan</h5>
+                    <p class="mb-0">Réservations & interface calendrier</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <p>
-        Ce projet a été développé dans le cadre de notre formation en développement web avec <strong>Django</strong>.
-    </p>
+    <!-- Conclusion -->
+    <div class="text-center mb-5">
+        <p class="fs-5">
+            Ce projet a été développé dans le cadre de notre formation en développement web avec <strong>Django</strong>.
+        </p>
+    </div>
 
-    <a href="{% url 'tables_app:home' %}" class="btn">Retour à l'accueil</a>
+    <!-- Bouton retour -->
+    <div class="text-center">
+        <a href="{% url 'tables_app:home' %}" class="btn btn-primary btn-lg shadow-sm">🏠 Retour à l'accueil</a>
+    </div>
+
 </div>
 {% endblock %}

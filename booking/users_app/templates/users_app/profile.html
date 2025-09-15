@@ -4,27 +4,33 @@
 {% block title %}Mon profil{% endblock %}
 
 {% block content %}
-<h1>Mon profil</h1>
+<div class="container my-4" style="max-width: 700px;">
 
-<!-- Formulaire infos personnelles -->
-<form method="post" action="{% url 'users_app:profile' %}">
-    {% csrf_token %}
-    <fieldset>
-        <legend>Informations personnelles</legend>
-        {{ form.as_p }}
-    </fieldset>
-    <button type="submit" name="update_profile" class="btn">Enregistrer les informations</button>
-</form>
+    <h1 class="mb-4 text-center">Mon profil</h1>
 
-<hr>
+    <!-- Formulaire infos personnelles -->
+    <div class="card shadow-sm mb-4 p-4 rounded-4">
+        <form method="post" action="{% url 'users_app:profile' %}">
+            {% csrf_token %}
+            <fieldset class="mb-3">
+                <legend class="fw-bold">Informations personnelles</legend>
+                {{ form.as_p }}
+            </fieldset>
+            <button type="submit" name="update_profile" class="btn btn-primary">Enregistrer les informations</button>
+        </form>
+    </div>
 
-<!-- Formulaire mot de passe -->
-<form method="post" action="{% url 'users_app:profile' %}">
-    {% csrf_token %}
-    <fieldset>
-        <legend>Changer le mot de passe</legend>
-        {{ password_form.as_p }}
-    </fieldset>
-    <button type="submit" name="update_password" class="btn">Changer le mot de passe</button>
-</form>
+    <!-- Formulaire mot de passe -->
+    <div class="card shadow-sm p-4 rounded-4">
+        <form method="post" action="{% url 'users_app:profile' %}">
+            {% csrf_token %}
+            <fieldset class="mb-3">
+                <legend class="fw-bold">Changer le mot de passe</legend>
+                {{ password_form.as_p }}
+            </fieldset>
+            <button type="submit" name="update_password" class="btn btn-warning">Changer le mot de passe</button>
+        </form>
+    </div>
+
+</div>
 {% endblock %}

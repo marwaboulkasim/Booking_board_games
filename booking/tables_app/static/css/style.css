@@ -21,7 +21,7 @@ a {
 }
 
 .btn-primary:hover {
-    background-color: #ff85a0;
+    background-color: #C49087;
     transform: scale(1.05);
 }
 
@@ -38,7 +38,7 @@ a {
 
 /* ----------------- TABLES ----------------- */
 .table th {
-    background-color: #ff85a0;
+    background-color: #C49087;
     color: #fff;
     font-weight: 600;
 }
@@ -58,9 +58,21 @@ a {
 }
 
 /* ----------------- NAVIGATION ----------------- */
+
+
+
+.custom-nav .container-fluid {
+    padding-left: 20px; /* ajuste selon ton design */
+    padding-right: 20px;
+}
+
+
 .custom-nav {
     background-color: #D9C6B0 !important; /* nude */
-    width: 100%;
+    width: 100% !important;
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0;
 }
 
 .custom-nav .navbar-nav {
@@ -69,7 +81,7 @@ a {
 }
 
 .custom-nav .nav-link {
-    color: #4B3621;
+    color: #C49087;
     font-weight: 500;
 }
 

@@ -1,31 +1,63 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Booking Game</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <div class="container">
-        <h1>Bienvenue sur Booking Game 🎲</h1>
 
-        {% if user.is_authenticated %}
-            <p>Vous êtes connecté en tant que <strong>{{ user.username }}</strong>.</p>
-            <nav class="menu">
-                <ul>
-                    <li><a href="{% url 'tables_app:about' %}">Qui sommes-nous ?</a></li>
-                    <li><a href="{% url 'tables_app:games' %}">Nos jeux disponibles</a></li>
-                    <li><a href="{% url 'tables_app:calendar' %}">Réserver une table</a></li>
-                    <li><a href="{% url 'users_app:my_bookings' %}">Mes réservations</a></li>
-                    <li><a href="{% url 'contact_app:contact' %}">Nous contacter</a></li>
-                    <li><a href="{% url 'users_app:profile' %}">Gérer mon compte</a></li>
-                    <li><a href="{% url 'users_app:logout' %}">Déconnexion</a></li>
-                </ul>
-            </nav>
-        {% else %}
-            <p>Veuillez vous <a href="{% url 'users_app:login' %}">connecter</a> ou vous <a href="{% url 'users_app:register' %}">inscrire</a>.</p>
-        {% endif %}
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+
+    <!-- Hero Section -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">🎲 Bienvenue sur Booking Game !</h1>
+        <p class="lead">Réservez facilement vos tables pour jouer à vos jeux préférés.</p>
+        <a href="{% url 'tables_app:calendar' %}" class="btn btn-primary btn-lg mt-3">Voir le calendrier</a>
     </div>
-</body>
-</html>
+
+    {% if user.is_authenticated %}
+    <!-- Liens rapides pour utilisateurs connectés -->
+    <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
+        <a class="btn btn-outline-primary" href="{% url 'tables_app:about' %}">Qui sommes-nous ?</a>
+        <a class="btn btn-outline-primary" href="{% url 'tables_app:games' %}">Nos jeux disponibles</a>
+        <a class="btn btn-outline-primary" href="{% url 'tables_app:calendar' %}">Réserver une table</a>
+        <a class="btn btn-outline-primary" href="{% url 'users_app:my_bookings' %}">Mes réservations</a>
+        <a class="btn btn-outline-primary" href="{% url 'contact_app:contact' %}">Nous contacter</a>
+        <a class="btn btn-outline-primary" href="{% url 'users_app:profile' %}">Gérer mon compte</a>
+        <a class="btn btn-outline-danger" href="{% url 'users_app:logout' %}">Déconnexion</a>
+    </div>
+    {% endif %}
+
+    <!-- Section Services / Informations -->
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm p-3 rounded-4 h-100 text-center">
+                <i class="bi bi-calendar-check display-4 text-primary mb-3"></i>
+                <h5 class="fw-bold">Réservation simple</h5>
+                <p>Réservez votre table en quelques clics et gérez vos créneaux facilement.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm p-3 rounded-4 h-100 text-center">
+                <i class="bi bi-people display-4 text-success mb-3"></i>
+                <h5 class="fw-bold">Jeux variés</h5>
+                <p>Choisissez parmi notre catalogue ou apportez vos propres jeux.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm p-3 rounded-4 h-100 text-center">
+                <i class="bi bi-emoji-smile display-4 text-warning mb-3"></i>
+                <h5 class="fw-bold">Expérience conviviale</h5>
+                <p>Profitez d’un espace ludique et sécurisé pour tous vos joueurs.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Call-to-Action -->
+    <div class="text-center mt-5">
+        <h2 class="fw-bold">Prêt à jouer ?</h2>
+        <p>Créez un compte ou connectez-vous pour commencer vos réservations.</p>
+        <a href="{% url 'users_app:register' %}" class="btn btn-success btn-lg me-2">S'inscrire</a>
+        <a href="{% url 'users_app:login' %}" class="btn btn-outline-primary btn-lg">Connexion</a>
+    </div>
+
+</div>
+{% endblock %}
