@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Gérer les Réservations{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="fw-bold text-center text-primary mb-4">📅 Gérer les Réservations</h1>
+
+    <table class="table table-striped table-hover shadow-sm align-middle">
+        <thead class="table-primary">
+            <tr>
+                <th>Table</th>
+                <th>Date</th>
+                <th>Heure</th>
+                <th>Type</th>
+                <th>Utilisateur</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.table.number_table }}</td>
+                <td>{{ booking.date|date:"d/m/Y" }}</td>
+                <td>{{ booking.start_time|time:"H:i" }} - {{ booking.end_time|time:"H:i" }}</td>
+                <td>
+                    {% if booking.booking_type == 'privée' %}
+                        <span class="badge bg-danger">🔒 Privée</span>
+                    {% else %}
+                        <span class="badge bg-success">👥 Publique</span>
+                    {% endif %}
+                </td>
+                <td>{{ booking.main_customer.username }}</td>
+                <td>
+                    <a href="{% url 'admin_app:edit_booking' booking.id %}" class="btn btn-sm btn-warning">✏️ Modifier</a>
+                    <a href="{% url 'admin_app:delete_booking' booking.id %}" class="btn btn-sm btn-danger">🗑 Supprimer</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-muted">Aucune réservation pour le moment.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

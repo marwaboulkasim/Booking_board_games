@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Booking Game{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    
-    <!-- Bootstrap CSS -->
+
+    <!-- Bootstrap CSS & FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
     <header class="mb-4">
@@ -23,16 +25,49 @@
         </nav>
     </header>
 
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg custom-nav py-3 w-100 px-4">
+    <div class="container-fluid px-0">
+        <a class="navbar-brand fw-bold" href="{% url 'tables_app:home' %}">🎲 Booking Game</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><span class="nav-link">Connecté : {{ user.username }}</span></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'tables_app:home' %}">Accueil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'tables_app:calendar' %}">Réserver</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contact_app:contact' %}">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'users_app:logout' %}">Se déconnecter</a></li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'users_app:login' %}">Connexion</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'users_app:register' %}">Inscription</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
 
-    <!-- Bootstrap JS (bundle avec Popper) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Ton JS custom -->
-    <script src="{% static 'tables_app/js/script.js' %}"></script>
+<!-- MAIN CONTENT -->
+<main class="py-4" style="min-height: calc(100vh - 140px);">
+    {% block content %}{% endblock %}
+</main>
 
-    {% block extra_js %}{% endblock %}
+<!-- FOOTER -->
+<footer class="footer w-100 py-4 px-4 d-flex justify-content-between align-items-center flex-wrap">
+    <p class="mb-2 mb-md-0">&copy; 2025 Booking Game. Tous droits réservés.</p>
+    <div class="social-icons">
+        <a href="#" target="_blank"><i class="bi bi-facebook"></i></a>
+        <a href="#" target="_blank"><i class="bi bi-instagram"></i></a>
+        <a href="#" target="_blank"><i class="bi bi-x"></i></a>
+    </div>
+</footer>
+
+<!-- JS Bootstrap & custom -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'tables_app/js/script.js' %}"></script>
+{% block extra_js %}{% endblock %}
+
 </body>
 </html>
