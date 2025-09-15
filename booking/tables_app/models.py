@@ -50,6 +50,26 @@ class Table(models.Model):
         return f"Table {self.number_table} - {self.state_table}"
 
 # Booking
+# class Booking(models.Model):
+#     date = models.DateField(default=timezone.now)
+#     start_time = models.TimeField()
+#     duration = models.DurationField(help_text="Durée (HH:MM:SS)")
+#     booking_type = models.CharField(max_length=10, choices=BookingType.choices)
+#     table = models.ForeignKey("Table", on_delete=models.CASCADE)
+#     main_customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bookings')
+#     code = models.CharField(max_length=10, blank=True, null=True)  # ajout du code
+
+#     def save(self, *args, **kwargs):
+#         # Générer un code uniquement si réservation privée et pas déjà présent
+#         if self.booking_type == BookingType.PRIVEE and not self.code:
+#             self.code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+#         super().save(*args, **kwargs)
+
+#     def __str__(self):
+#         return f"{self.main_customer.pseudo} - Table {self.table.number_table} le {self.date}"
+    
+# tables_app_booking/models.py
+
 class Booking(models.Model):
     date = models.DateField(default=timezone.now)
     start_time = models.TimeField()
@@ -58,6 +78,10 @@ class Booking(models.Model):
     table = models.ForeignKey("Table", on_delete=models.CASCADE)
     main_customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bookings')
     code = models.CharField(max_length=10, blank=True, null=True)  # ajout du code
+
+    # 🔽 Nouveaux champs
+    game = models.ForeignKey("tables_app.Game", on_delete=models.SET_NULL, null=True, blank=True)
+    custom_game = models.CharField(max_length=100, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         # Générer un code uniquement si réservation privée et pas déjà présent

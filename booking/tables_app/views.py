@@ -36,7 +36,6 @@ def calendar_view(request):
             conflicts = Booking.objects.filter(
                 table=table,
                 date=selected_date,
-            ).filter(
                 start_time__lt=slot["end"],
                 start_time__gte=slot["start"]
             )
@@ -66,10 +65,14 @@ def calendar_view(request):
             main_customer=request.user
         ).order_by('-date', 'start_time')
 
+    # 👉 Récupérer la liste des jeux disponibles
+    games = Game.objects.all()
+
     context = {
         "date": selected_date,
         "tables": tables_data,
         "user_reservations": user_reservations,
+        "games": games,  # 👈 on passe les jeux au template
     }
     return render(request, "tables_app/calendar.html", context)
 
@@ -82,7 +85,7 @@ def booking_confirmation(request, booking_id):
     })
 
 
-# --- Nos jeux disponibles ---
+# --- Liste de nos jeux disponibles ---
 def games(request):
     # Récupérer les filtres GET
     category = request.GET.get("category")
@@ -112,6 +115,7 @@ def games(request):
     return render(request, "tables_app/game.html", context)
 
 
+# --- Détail d’un jeu ---
 def game_detail(request, game_id):
     game = get_object_or_404(Game, id=game_id)
     return render(request, "tables_app/game_detail.html", {"game": game})
@@ -121,14 +125,18 @@ def game_detail(request, game_id):
 def about_view(request):
     return render(request, 'tables_app/about.html')
 
+
 def games_view(request):
     return render(request, 'tables_app/games.html')
+
 
 def book_table_view(request):
     return render(request, 'tables_app/book_table.html')
 
+
 def contact_view(request):
-    return render(request, 'tables_app:contact.html')
+    return render(request, 'tables_app/contact.html')  # ✅ correction
+
 
 def account_view(request):
     return render(request, 'tables_app/account.html')

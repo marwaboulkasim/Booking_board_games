@@ -67,6 +67,7 @@
                         <th scope="col">Heure</th>
                         <th scope="col">Type</th>
                         <th scope="col">Code privé</th>
+                        <th scope="col">Jeu</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -85,6 +86,15 @@
                         <td>
                             {% if booking.code %}
                                 <span class="fw-bold text-primary">{{ booking.code }}</span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if booking.game %}
+                                {{ booking.game.name_game }}
+                            {% elif booking.custom_game %}
+                                {{ booking.custom_game }}
                             {% else %}
                                 -
                             {% endif %}
@@ -114,12 +124,39 @@
             <input type="hidden" id="date_input" name="date">
             <input type="hidden" id="slot_label" name="slot_label">
 
+            <!-- Type de réservation -->
             <div class="mb-3">
                 <label for="booking_type" class="form-label fw-semibold">Type de réservation :</label>
                 <select class="form-select shadow-sm" id="booking_type" name="booking_type">
                     <option value="privée">🔒 Privée</option>
                     <option value="publique">👥 Publique</option>
                 </select>
+            </div>
+
+            <!-- Choix du jeu -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Choix du jeu :</label>
+                <select class="form-select shadow-sm" id="game_choice" name="booking_choice">
+                    <option value="our_game" selected>📚 Choisir un de nos jeux</option>
+                    <option value="custom">👜 J'apporte mon propre jeu</option>
+                </select>
+            </div>
+
+            <!-- Liste des jeux du catalogue -->
+            <div class="mb-3" id="catalogue_games">
+                <label for="game_id" class="form-label">Sélectionnez un jeu :</label>
+                <select class="form-select shadow-sm" id="game_id" name="game_id">
+                    <option value="">-- Sélectionnez un jeu --</option>
+                    {% for game in games %}
+                    <option value="{{ game.id }}">{{ game.name_game }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Jeu perso -->
+            <div class="mb-3" id="custom_game_div" style="display:none;">
+                <label for="custom_game_input" class="form-label">Nom du jeu :</label>
+                <input type="text" class="form-control shadow-sm" id="custom_game_input" name="custom_game">
             </div>
         </div>
         <div class="modal-footer d-flex justify-content-between">
@@ -139,6 +176,16 @@ document.addEventListener("DOMContentLoaded", function() {
     const bookingModalEl = document.getElementById('bookingModal');
     const bookingModal = new bootstrap.Modal(bookingModalEl);
 
+    const gameChoice = document.getElementById("game_choice");
+    const catalogueGames = document.getElementById("catalogue_games");
+    const customGameDiv = document.getElementById("custom_game_div");
+
+    function updateGameFields() {
+        catalogueGames.style.display = (gameChoice.value === "our_game") ? "block" : "none";
+        customGameDiv.style.display = (gameChoice.value === "custom") ? "block" : "none";
+    }
+
+    // ouverture modal réservation
     document.querySelectorAll(".reserve-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const tableId = btn.dataset.tableId;
@@ -151,9 +198,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
             bookingForm.action = `/users/create-booking/${tableId}/`;
 
+            // Réinitialiser le choix de jeu à "our_game" par défaut
+            gameChoice.value = "our_game";
+            updateGameFields();
+
             bookingModal.show();
         });
     });
+
+    // gestion choix du jeu
+    gameChoice.addEventListener("change", updateGameFields);
 });
 </script>
 {% endblock %}
