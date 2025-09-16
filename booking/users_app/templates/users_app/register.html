@@ -1,21 +1,22 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscription</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <div class="container">
-        <h1>Inscription</h1>
-        <form method="POST">
+
+{% block title %}Inscription{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <div class="register-card">
+        <h1 class="register-title">Inscription</h1>
+        <form method="POST" class="register-form">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn">S'inscrire</button>
+            <button type="submit" class="btn-submit">S'inscrire</button>
         </form>
-        <p>Déjà inscrit ? <a href="{% url 'users_app:login' %}">Se connecter</a></p>
+        <p class="login-link">Déjà inscrit ? <a href="{% url 'users_app:login' %}">Se connecter</a></p>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}

@@ -1,71 +1,80 @@
+{% extends "base.html" %}
 {% load static %}
-{% load static %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Nos Jeux - Booking Game</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <div class="container">
 
-        <!-- Bouton retour -->
-        <div class="back-home">
-            <a href="{% url 'tables_app:home' %}" class="btn">Retour à l'accueil</a>
-        </div>
+{% block title %}Nos Jeux{% endblock %}
 
-        <h1>🎲 Nos Jeux Disponibles</h1>
+{% block content %}
 
-        <!-- Formulaire de filtre -->
-        <form method="get" action="{% url 'tables_app:games' %}" class="filter-form">
-            <label for="category">Catégorie :</label>
-            <select name="category" id="category">
-                <option value="">-- Toutes --</option>
+<div class="container my-5">
+
+    <!-- Bouton retour -->
+    <div class="mb-4">
+        <a href="{% url 'tables_app:home' %}" class="btn btn-outline-secondary btn-sm shadow-sm">🏠 Retour à l'accueil</a>
+    </div>
+
+    <h1 class="mb-4 text-center title-games">🎲 Nos Jeux Disponibles</h1>
+
+    <!-- Formulaire de filtre -->
+    <form method="get" action="{% url 'tables_app:games' %}" class="row g-3 mb-4 justify-content-center">
+        <div class="col-md-3">
+            <label for="category" class="form-label text-secondary">Catégorie :</label>
+            <select name="category" id="category" class="form-select border-secondary shadow-sm">
+                <option value=""> Toutes </option>
                 {% for category in categories %}
                     <option value="{{ category }}" {% if request.GET.category == category %}selected{% endif %}>{{ category }}</option>
                 {% endfor %}
             </select>
-
-            <label for="players">Nombre minimum de joueurs :</label>
-            <select name="players" id="players">
-                <option value="">-- Tous --</option>
+        </div>
+        <div class="col-md-3">
+            <label for="players" class="form-label text-secondary">Nombre minimum de joueurs :</label>
+            <select name="players" id="players" class="form-select border-secondary shadow-sm">
+                <option value=""> Tous </option>
                 {% for nb in player_options %}
                     <option value="{{ nb }}" {% if request.GET.players == nb|stringformat:"s" %}selected{% endif %}>{{ nb }}</option>
                 {% endfor %}
             </select>
-
-            <label for="max_players">Nombre maximum de joueurs :</label>
-            <select name="max_players" id="max_players">
-                <option value="">-- Tous --</option>
+        </div>
+        <div class="col-md-3">
+            <label for="max_players" class="form-label text-secondary">Nombre maximum de joueurs :</label>
+            <select name="max_players" id="max_players" class="form-select border-secondary shadow-sm">
+                <option value=""> Tous </option>
                 {% for nb in max_player_options %}
                     <option value="{{ nb }}" {% if request.GET.max_players == nb|stringformat:"s" %}selected{% endif %}>{{ nb }}</option>
                 {% endfor %}
             </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-secondary w-100 shadow-sm">Filtrer</button>
+        </div>
+    </form>
 
-            
-            <!-- Bouton Filtrer -->
-            <button type="submit" class="btn">Filtrer</button>
-        </form>
+    <hr>
 
-        <hr>
-
-        <!-- Liste des jeux -->
-        {% if games %}
-            <div class="games-grid">
-                {% for game in games %}
-                    <a href="{% url 'tables_app:game_detail' game.id %}" class="game-card">
-                        <div class="game-image">
-                            <img src="{{ game.image_url }}" alt="{{ game.name_game }}">
+    <!-- Liste des jeux -->
+    {% if games %}
+        <div class="row g-4">
+            {% for game in games %}
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <a href="{% url 'tables_app:game_detail' game.id %}" class="text-decoration-none">
+                        <div class="card h-100 shadow-sm border-secondary">
+                            {% if game.image_url %}
+                            <img src="{{ game.image_url }}" class="card-img-top" alt="{{ game.name_game }}">
+                            {% else %}
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height:200px;">
+                                <span class="text-muted">Pas d'image</span>
+                            </div>
+                            {% endif %}
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-dark fw-bold">{{ game.name_game }}</h5>
+                            </div>
                         </div>
-                        <h3>{{ game.name_game }}</h3>
                     </a>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p>Aucun jeu ne correspond à vos critères.</p>
-        {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center text-muted mt-4">Aucun jeu ne correspond à vos critères.</p>
+    {% endif %}
 
-    </div>
-</body>
-</html>
+</div>
+{% endblock %}

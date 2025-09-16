@@ -1,21 +1,18 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <div class="container">
-        <h1>Connexion</h1>
-        <form method="POST">
+
+{% block title %}Connexion{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <div class="register-card">
+        <h1 class="register-title">Connexion</h1>
+        <form method="POST" class="register-form">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn">Se connecter</button>
+            <button type="submit" class="btn-submit">Se connecter</button>
         </form>
-        <p>Pas encore inscrit ? <a href="{% url 'users_app:register' %}">S'inscrire</a></p>
+        <p class="login-link">Pas encore inscrit ? <a href="{% url 'users_app:register' %}">S'inscrire</a></p>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

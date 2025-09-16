@@ -4,27 +4,112 @@
 {% block title %}Mon profil{% endblock %}
 
 {% block content %}
-<h1>Mon profil</h1>
+<div class="container my-5">
 
-<!-- Formulaire infos personnelles -->
-<form method="post" action="{% url 'users_app:profile' %}">
-    {% csrf_token %}
-    <fieldset>
-        <legend>Informations personnelles</legend>
-        {{ form.as_p }}
-    </fieldset>
-    <button type="submit" name="update_profile" class="btn">Enregistrer les informations</button>
-</form>
+    <!-- Titre principal -->
+    <h1 class="mb-5 text-center fw-bold" 
+        style="color:#235452; display:flex; justify-content:center; align-items:center; gap:10px;">
+        
+        <!-- Icône utilisateur -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#235452" 
+             class="bi bi-person-circle" viewBox="0 0 16 16">
+            <path d="M11 10a2 2 0 1 0-6 0 2 2 0 0 0 6 0z"/>
+            <path fill-rule="evenodd" 
+                  d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 
+                     11.37c.244-.387.54-.731.867-1.02C4.925 10.768 
+                     6.377 10 8 10c1.623 0 3.075.768 4.601 
+                     1.35.327.289.623.633.867 
+                     1.02A7 7 0 0 0 8 1z"/>
+        </svg>
+        Mon profil
+    </h1>
 
-<hr>
+    <div class="row g-4">
+        
+        <!-- Carte Infos personnelles -->
+        <div class="col-md-6">
+            <div class="card shadow-lg rounded-4" 
+                 style="background-color:#E8F4F2; border-left:8px solid #2F807D; 
+                        transition: transform 0.2s;"
+                 onmouseover="this.style.transform='scale(1.02)'" 
+                 onmouseout="this.style.transform='scale(1)'">
+                 
+                <div class="card-body p-4">
+                    <form method="post" action="{% url 'users_app:profile' %}">
+                        {% csrf_token %}
+                        <fieldset class="mb-4">
+                            <legend class="fw-bold mb-3" 
+                                    style="color:#2F807D; display:flex; align-items:center; gap:8px;">
+                                <!-- Icône cartable -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" 
+                                     fill="#2F807D" class="bi bi-briefcase-fill" viewBox="0 0 16 16">
+                                    <path d="M0 4a2 2 0 0 1 2-2h3V1a1 
+                                             1 0 0 1 1-1h4a1 1 0 0 1 
+                                             1 1v1h3a2 2 0 0 1 2 2v2H0V4zm0 
+                                             3h16v7a2 2 0 0 1-2 2H2a2 2 
+                                             0 0 1-2-2V7zm6-5v1h4V2H6z"/>
+                                </svg>
+                                Informations personnelles
+                            </legend>
+                            {{ form.as_p }}
+                        </fieldset>
 
-<!-- Formulaire mot de passe -->
-<form method="post" action="{% url 'users_app:profile' %}">
-    {% csrf_token %}
-    <fieldset>
-        <legend>Changer le mot de passe</legend>
-        {{ password_form.as_p }}
-    </fieldset>
-    <button type="submit" name="update_password" class="btn">Changer le mot de passe</button>
-</form>
+                        <button type="submit" name="update_profile" 
+                                class="btn btn-lg w-100" 
+                                style="background-color:#2F807D; color:white; font-weight:bold; 
+                                       border-radius:10px; transition: transform 0.2s;"
+                                onmouseover="this.style.transform='scale(1.05)'" 
+                                onmouseout="this.style.transform='scale(1)'">
+                            Enregistrer les informations
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carte Changer mot de passe -->
+        <div class="col-md-6">
+            <div class="card shadow-lg rounded-4" 
+                 style="background-color:#E8F4F2; border-left:8px solid #235452; 
+                        transition: transform 0.2s;"
+                 onmouseover="this.style.transform='scale(1.02)'" 
+                 onmouseout="this.style.transform='scale(1)'">
+                 
+                <div class="card-body p-4">
+                    <form method="post" action="{% url 'users_app:profile' %}">
+                        {% csrf_token %}
+                        <fieldset class="mb-4">
+                            <legend class="fw-bold mb-3" 
+                                    style="color:#235452; display:flex; align-items:center; gap:8px;">
+                                <!-- Icône cadenas -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" 
+                                     fill="#235452" class="bi bi-lock-fill" viewBox="0 0 16 16">
+                                    <path d="M8 1a3 3 0 0 0-3 3v3h6V4a3 
+                                             3 0 0 0-3-3zM3 8V4a5 5 0 0 1 
+                                             10 0v4h.5A1.5 1.5 0 0 1 15 
+                                             9.5v5A1.5 1.5 0 0 1 13.5 
+                                             16h-11A1.5 1.5 0 0 1 1 
+                                             14.5v-5A1.5 1.5 0 0 1 
+                                             2.5 8H3z"/>
+                                </svg>
+                                Changer le mot de passe
+                            </legend>
+                            {{ password_form.as_p }}
+                        </fieldset>
+
+                        <button type="submit" name="update_password" 
+                                class="btn btn-lg w-100" 
+                                style="background-color:#235452; color:white; font-weight:bold; 
+                                       border-radius:10px; transition: transform 0.2s;"
+                                onmouseover="this.style.transform='scale(1.05)'" 
+                                onmouseout="this.style.transform='scale(1)'">
+                            Changer le mot de passe
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
 {% endblock %}
