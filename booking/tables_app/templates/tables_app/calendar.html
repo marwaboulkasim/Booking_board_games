@@ -29,20 +29,46 @@
                     <h5 class="card-title fw-bold text-center text-primary">Table {{ t.table.number_table }}</h5>
                     <ul class="list-group list-group-flush mt-3">
                         {% for slot in t.slots %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span class="fw-semibold">{{ slot.slot_label }}</span>
-                            <span class="badge rounded-pill 
-                                {% if slot.state == 'Libre' %} bg-success {% else %} bg-warning text-dark {% endif %}">
-                                {{ slot.state }}
-                            </span>
+                        <li class="list-group-item d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-center w-100">
+                                <span class="fw-semibold">{{ slot.slot_label }}</span>
+                                <span class="badge rounded-pill 
+                                    {% if slot.state == 'Libre' %} bg-success {% else %} bg-warning text-dark {% endif %}">
+                                    {{ slot.state }}
+                                </span>
 
-                            {% if slot.available %}
-                            <button class="btn btn-outline-primary btn-sm reserve-btn shadow-sm"
-                                data-table-id="{{ t.table.id }}"
-                                data-slot-label="{{ slot.slot_label }}"
-                                data-date="{{ date|date:'Y-m-d' }}">
-                                Réserver
-                            </button>
+                                {% if slot.available %}
+                                    <button class="btn btn-outline-primary btn-sm reserve-btn shadow-sm"
+                                        data-table-id="{{ t.table.id }}"
+                                        data-slot-label="{{ slot.slot_label }}"
+                                        data-booking-id="{{ slot.booking_id|default:'' }}"
+                                        data-date="{{ date|date:'Y-m-d' }}">
+                                        Réserver
+                                    </button>
+                                {% else %}
+                                    {% if slot.booking_id %}
+                                        {% if slot.is_full %}
+                                            <span class="badge bg-secondary ms-2">🚫 Complet</span>
+                                        {% else %}
+                                            <a href="{% url 'users_app:join_booking' slot.booking_id %}" 
+                                               class="btn btn-success btn-sm ms-2 shadow-sm">
+                                                Rejoindre
+                                            </a>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+
+                            <!-- afficher joueurs si existants -->
+                            {% if slot.players %}
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        👥 Participants : 
+                                        {% for p in slot.players %}
+                                            {{ p.pseudo }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </small>
+                                </div>
                             {% endif %}
                         </li>
                         {% endfor %}
@@ -141,6 +167,12 @@
                     <option value="custom">👜 J'apporte mon propre jeu</option>
                 </select>
             </div>
+            <!-- Nombre de joueurs max (pour les tables publiques uniquement) -->
+            <div class="mb-3" id="max_players_div" style="display:none;">
+                <label for="max_players" class="form-label fw-semibold">Nombre maximum de joueurs :</label>
+                <input type="number" class="form-control shadow-sm" id="max_players" name="max_players" min="2" max="12">
+                <div class="form-text">Laissez vide pour utiliser le nombre de joueurs max du jeu choisi.</div>
+            </div>
 
             <!-- Liste des jeux du catalogue -->
             <div class="mb-3" id="catalogue_games">
@@ -188,23 +220,47 @@ document.addEventListener("DOMContentLoaded", function() {
     // ouverture modal réservation
     document.querySelectorAll(".reserve-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-            const tableId = btn.dataset.tableId;
-            const date = btn.dataset.date;
-            const slotLabel = btn.dataset.slotLabel;
+            const bookingId = btn.dataset.bookingId;
 
-            document.getElementById("table_id").value = tableId;
-            document.getElementById("date_input").value = date;
-            document.getElementById("slot_label").value = slotLabel;
+            if (bookingId) {
+                // Cas d'une table publique existante -> rejoindre
+                fetch(`/users/join-public/${bookingId}/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                    }
+                }).then(res => {
+                    if (res.ok) location.reload();
+                });
+            } else {
+                // Cas normal : nouvelle réservation
+                const tableId = btn.dataset.tableId;
+                const date = btn.dataset.date;
+                const slotLabel = btn.dataset.slotLabel;
 
-            bookingForm.action = `/users/create-booking/${tableId}/`;
+                document.getElementById("table_id").value = tableId;
+                document.getElementById("date_input").value = date;
+                document.getElementById("slot_label").value = slotLabel;
 
-            // Réinitialiser le choix de jeu à "our_game" par défaut
-            gameChoice.value = "our_game";
-            updateGameFields();
+                bookingForm.action = `/users/create-booking/${tableId}/`;
 
-            bookingModal.show();
+                gameChoice.value = "our_game";
+                updateGameFields();
+
+                bookingModal.show();
+            }
         });
     });
+
+    const bookingType = document.getElementById("booking_type");
+    const maxPlayersDiv = document.getElementById("max_players_div");
+
+    function toggleMaxPlayers() {
+        maxPlayersDiv.style.display = (bookingType.value === "publique") ? "block" : "none";
+    }
+
+    bookingType.addEventListener("change", toggleMaxPlayers);
+    document.addEventListener("DOMContentLoaded", toggleMaxPlayers);
 
     // gestion choix du jeu
     gameChoice.addEventListener("change", updateGameFields);

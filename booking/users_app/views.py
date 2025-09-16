@@ -4,18 +4,18 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm, ProfileForm, PasswordChangeForm, EditBookingForm
 from django.contrib.auth import update_session_auth_hash
-from tables_app.models import Table, Booking
+from tables_app.models import Table, Booking, Game
 from users_app.forms import EditBookingForm
-import datetime
+from datetime import datetime, time, timedelta
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-import datetime
 import random
 import string
 from django.contrib.auth import get_user_model
 from django.contrib import messages
-
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
 # --- HOME ---
 def home(request):
     return render(request, "home.html")
@@ -85,9 +85,9 @@ def profile_view(request):
 
 # --- Créneaux disponibles ---
 TIME_SLOTS = {
-    "14h-18h": (datetime.time(14, 0), datetime.time(18, 0)),
-    "18h-20h": (datetime.time(18, 0), datetime.time(20, 0)),
-    "20h-00h": (datetime.time(20, 0), datetime.time(0, 0)),
+    "14h-18h": (time(14, 0), time(18, 0)),
+    "18h-20h": (time(18, 0), time(20, 0)),
+    "20h-00h": (time(20, 0), time(0, 0)),
 
 }
 
@@ -103,23 +103,23 @@ def create_booking(request, table_id):
         booking_type = request.POST.get("booking_type")
 
         # --- Nouveaux champs pour le choix de jeu ---
-        booking_choice = request.POST.get("booking_choice")  # "our_game" / "custom" / None
-        game_id = request.POST.get("game_id")
+        booking_choice = request.POST.get("booking_choice")  # "our_game" / "custom"
+        game_id = request.POST.get("game_id") or request.POST.get("game")
         custom_game = request.POST.get("custom_game")
+        max_players = request.POST.get("max_players")
 
         # --- Conversion de la date ---
         try:
-            selected_date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+            selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
         except ValueError:
             messages.error(request, "Format de date invalide.")
             return redirect("tables_app:calendar")
 
         # --- Définition des créneaux horaires ---
         slots = {
-                "14h-18h": (datetime.time(14, 0), datetime.time(18, 0)),
-                "18h-20h": (datetime.time(18, 0), datetime.time(20, 0)),
-                "20h-00h": (datetime.time(20, 0), datetime.time(0, 0)),
-
+            "14h-18h": (time(14, 0), time(18, 0)),
+            "18h-20h": (time(18, 0), time(20, 0)),
+            "20h-00h": (time(20, 0), time(0, 0)),
         }
 
         if slot_label not in slots:
@@ -127,17 +127,43 @@ def create_booking(request, table_id):
             return redirect("tables_app:calendar")
 
         start_time, end_time = slots[slot_label]
+        start_dt = datetime.combine(selected_date, start_time)
+        end_dt = datetime.combine(selected_date, end_time)
 
         # --- Vérification des conflits ---
-        conflicts = Booking.objects.filter(
-            table=table,
-            date=selected_date,
-            start_time__lt=end_time,
-            start_time__gte=start_time
-        )
-        if conflicts.exists():
-            messages.error(request, f"Le créneau {slot_label} est déjà réservé pour cette table.")
-            return redirect("tables_app:calendar")
+        existing = Booking.objects.filter(table=table, date=selected_date)
+        for b in existing:
+            b_start = datetime.combine(b.date, b.start_time)
+            b_end = b_start + b.duration
+            if not (b_end <= start_dt or b_start >= end_dt):  # chevauchement
+                messages.error(request, f"Le créneau {slot_label} est déjà réservé pour cette table.")
+                return redirect("tables_app:calendar")
+
+        # --- Gestion jeu et max_players ---
+        game = None
+        mp = None
+
+        if booking_type == "publique":
+            # Obligatoire : un jeu choisi
+            if not (game_id or custom_game):
+                messages.error(request, "Sélectionnez un jeu pour une table publique.")
+                return redirect("tables_app:calendar")
+
+            # Jeu de la base
+            if booking_choice == "our_game" and game_id:
+                game = get_object_or_404(Game, id=game_id)
+
+            # Définition des places max
+            try:
+                mp = int(max_players) if max_players else None
+            except ValueError:
+                mp = None
+
+            if mp is None and game and hasattr(game, "nb_player_max_game"):
+                mp = game.nb_player_max_game
+
+            if getattr(table, "capacity_table", None) and mp and mp > table.capacity_table:
+                mp = table.capacity_table
 
         # --- Création de la réservation ---
         booking = Booking(
@@ -145,29 +171,55 @@ def create_booking(request, table_id):
             main_customer=customer,
             date=selected_date,
             start_time=start_time,
-            duration=datetime.timedelta(
-                hours=(end_time.hour - start_time.hour),
-                minutes=(end_time.minute - start_time.minute)
-            ),
-            booking_type=booking_type
+            duration=end_dt - start_dt,
+            booking_type=booking_type,
+            game=game if booking_type == "publique" else None,
+            custom_game=custom_game if booking_type == "publique" else None,
+            max_players=mp if booking_type == "publique" else None,
         )
-
-        # 🎲 Gérer le choix du jeu
-        if booking_choice == "our_game" and game_id:
-            booking.game_id = int(game_id)  # conversion en int pour ForeignKey
-        elif booking_choice == "custom" and custom_game:
-            booking.custom_game = custom_game
-
-        # --- Sauvegarde de la réservation ---
         booking.save()
+        
+        max_players_input = request.POST.get('max_players')
+        if booking_type == 'publique':
+            if max_players_input:
+                booking.max_players = int(max_players_input)
+            elif booking.game:
+                booking.max_players = booking.game.nb_player_max_game  # fallback au nombre de joueurs max du jeu
+            else:
+                booking.max_players = 12  # fallback par défaut
 
-        # Si réservation privée → générer un code
+        # Code uniquement pour les réservations privées
         if booking.booking_type == "privée" and not booking.code:
             booking.code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
             booking.save()
 
         return redirect(reverse("users_app:booking_confirmation", args=[booking.id]))
 
+    return redirect("tables_app:calendar")
+
+##### Rejoindre / Quitter une table publique ####
+@require_POST
+@login_required
+def join_public_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, booking_type='publique')
+
+    # Vérifier qu’il reste de la place
+    if booking.participants.count() + 1 >= booking.max_players:
+        return JsonResponse({"error": "Table complète"}, status=400)
+
+    # Ajouter le joueur
+    booking.participants.add(request.user)
+    return JsonResponse({"success": True})
+
+
+@login_required
+def leave_public_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, booking_type='publique')
+    if booking.participants.filter(id=request.user.id).exists():
+        booking.participants.remove(request.user)
+        messages.success(request, "Vous avez quitté la table.")
+    else:
+        messages.info(request, "Vous n'étiez pas inscrit sur cette table.")
     return redirect("tables_app:calendar")
 
 #################

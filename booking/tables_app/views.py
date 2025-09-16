@@ -24,7 +24,7 @@ def calendar_view(request):
     slots = [
         {"label": "14h-18h", "start": time(14, 0), "end": time(18, 0)},
         {"label": "18h-20h", "start": time(18, 0), "end": time(20, 0)},
-        {"label": "20h-00h", "start": time(20, 0), "end": time(23, 59)},
+        {"label": "20h-00h", "start": time(20, 0), "end": time(0, 0)},
     ]
 
     tables_data = []
@@ -41,18 +41,46 @@ def calendar_view(request):
             )
 
             if conflicts.exists():
-                state = conflicts.first().booking_type
-                available = False
+                booking = conflicts.first()
+                if booking.booking_type == 'publique':
+                    # nombre de joueurs = 1 (créateur) + participants
+                    joueurs_actuels = booking.seats_taken  # 1 + participants.count()
+                    places_restantes = booking.max_players - joueurs_actuels if booking.max_players else None
+
+                    # état affiché
+                    if places_restantes is None:
+                        state = f"Publique (jeu: {booking.game.name_game if booking.game else '-'})"
+                        available = True
+                    elif places_restantes <= 0:
+                        state = f"Publique — Complète (jeu: {booking.game.name_game if booking.game else '-'})"
+                        available = False
+                    else:
+                        state = f"Publique — {places_restantes} place(s) restantes (jeu: {booking.game.name_game if booking.game else '-'})"
+                        available = True
+
+                    players = [booking.main_customer] + list(booking.participants.all())
+                    booking_id = booking.id
+                else:
+                    # privée
+                    state = 'Privée'
+                    available = False
+                    players = []
+                    booking_id = None
             else:
                 state = 'Libre'
                 available = True
+                players = []
+                booking_id = None
 
             table_slots.append({
                 "slot_label": slot["label"],
                 "state": state,
                 "available": available,
+                "players": players,
+                "booking_id": booking_id,
             })
 
+        # <--- ajout manquant : enregistrer les slots de cette table
         tables_data.append({
             "table": table,
             "slots": table_slots
@@ -65,14 +93,14 @@ def calendar_view(request):
             main_customer=request.user
         ).order_by('-date', 'start_time')
 
-    # 👉 Récupérer la liste des jeux disponibles
+    # Liste des jeux
     games = Game.objects.all()
 
     context = {
         "date": selected_date,
         "tables": tables_data,
         "user_reservations": user_reservations,
-        "games": games,  # 👈 on passe les jeux au template
+        "games": games,
     }
     return render(request, "tables_app/calendar.html", context)
 

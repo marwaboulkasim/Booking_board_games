@@ -16,6 +16,8 @@ urlpatterns = [
     path("my-bookings/", views.my_bookings, name="my_bookings"),
     path("my-bookings/<int:booking_id>/edit/", views.edit_booking, name="edit_booking"),
     path("my-bookings/<int:booking_id>/delete/", views.delete_booking, name="delete_booking"),
+    path('join-booking/<int:booking_id>/', views.join_public_booking, name='join_booking'),
+    path('leave-booking/<int:booking_id>/', views.leave_public_booking, name='leave_booking'),
 
 ]
 
