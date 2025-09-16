@@ -16,6 +16,11 @@ from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
+from django.db.models import Q
+from django.http import HttpResponseForbidden
+
+
+
 # --- HOME ---
 def home(request):
     return render(request, "home.html")
@@ -91,7 +96,8 @@ TIME_SLOTS = {
 
 }
 
-#################### Créer une réservation ####################
+# ####### CREER UNE RESA ######
+
 @login_required
 def create_booking(request, table_id):
     table = get_object_or_404(Table, id=table_id)
@@ -106,7 +112,7 @@ def create_booking(request, table_id):
         booking_choice = request.POST.get("booking_choice")  # "our_game" / "custom"
         game_id = request.POST.get("game_id") or request.POST.get("game")
         custom_game = request.POST.get("custom_game")
-        max_players = request.POST.get("max_players")
+        max_players_input = request.POST.get("max_players")
 
         # --- Conversion de la date ---
         try:
@@ -139,10 +145,8 @@ def create_booking(request, table_id):
                 messages.error(request, f"Le créneau {slot_label} est déjà réservé pour cette table.")
                 return redirect("tables_app:calendar")
 
-        # --- Gestion jeu et max_players ---
+        # --- Gestion jeu ---
         game = None
-        mp = None
-
         if booking_type == "publique":
             # Obligatoire : un jeu choisi
             if not (game_id or custom_game):
@@ -153,17 +157,21 @@ def create_booking(request, table_id):
             if booking_choice == "our_game" and game_id:
                 game = get_object_or_404(Game, id=game_id)
 
-            # Définition des places max
+        # --- Définition des places max pour table publique ---
+        mp = None
+        if booking_type == "publique":
             try:
-                mp = int(max_players) if max_players else None
+                mp = int(max_players_input) if max_players_input else None
             except ValueError:
                 mp = None
 
+            # fallback sur jeu si utilisateur n’a rien rempli
             if mp is None and game and hasattr(game, "nb_player_max_game"):
                 mp = game.nb_player_max_game
 
-            if getattr(table, "capacity_table", None) and mp and mp > table.capacity_table:
-                mp = table.capacity_table
+            # limiter à la capacité de la table si nécessaire
+            if getattr(table, "capacity_table", None) and mp:
+                mp = min(mp, table.capacity_table)
 
         # --- Création de la réservation ---
         booking = Booking(
@@ -177,25 +185,20 @@ def create_booking(request, table_id):
             custom_game=custom_game if booking_type == "publique" else None,
             max_players=mp if booking_type == "publique" else None,
         )
-        booking.save()
-        
-        max_players_input = request.POST.get('max_players')
-        if booking_type == 'publique':
-            if max_players_input:
-                booking.max_players = int(max_players_input)
-            elif booking.game:
-                booking.max_players = booking.game.nb_player_max_game  # fallback au nombre de joueurs max du jeu
-            else:
-                booking.max_players = 12  # fallback par défaut
 
-        # Code uniquement pour les réservations privées
-        if booking.booking_type == "privée" and not booking.code:
+        # --- Code pour réservation privée ---
+        if booking_type == "privée" and not booking.code:
             booking.code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-            booking.save()
+
+        # --- Sauvegarde finale ---
+        booking.save()
 
         return redirect(reverse("users_app:booking_confirmation", args=[booking.id]))
 
     return redirect("tables_app:calendar")
+
+
+
 
 ##### Rejoindre / Quitter une table publique ####
 @require_POST
@@ -220,7 +223,7 @@ def leave_public_booking(request, booking_id):
         messages.success(request, "Vous avez quitté la table.")
     else:
         messages.info(request, "Vous n'étiez pas inscrit sur cette table.")
-    return redirect("tables_app:calendar")
+    return redirect('users_app:my_bookings')
 
 #################
 
@@ -244,9 +247,18 @@ def booking_confirmation(request, booking_id):
 
 
 # --- MES RESERVATIONS ---
+# @login_required
+# def my_bookings(request):
+#     bookings = Booking.objects.filter(main_customer=request.user).select_related('table')
+#     return render(request, "users_app/my_bookings.html", {"bookings": bookings})
+
 @login_required
 def my_bookings(request):
-    bookings = Booking.objects.filter(main_customer=request.user).select_related('table')
+    # Récupérer toutes les réservations où l'utilisateur est créateur ou participant
+    bookings = Booking.objects.filter(
+        Q(main_customer=request.user) | Q(participants=request.user)
+    ).select_related('table').order_by('-date', 'start_time')
+
     return render(request, "users_app/my_bookings.html", {"bookings": bookings})
 
 # --- MODIFICATION DES RESERVATIONS --- 
@@ -269,9 +281,17 @@ def edit_booking(request, booking_id):
 
 @login_required
 def delete_booking(request, booking_id):
-    booking = get_object_or_404(Booking, id=booking_id, main_customer=request.user)
-    booking.delete()
-    messages.success(request, "Réservation supprimée 🗑️")
-    return redirect("users_app:my_bookings")
+    booking = get_object_or_404(Booking, id=booking_id)
+
+    # Vérifie que l'utilisateur est bien le propriétaire
+    if booking.main_customer != request.user:
+        return HttpResponseForbidden("Vous n'avez pas le droit de supprimer cette réservation.")
+
+    if request.method == "POST":
+        booking.delete()
+        messages.success(request, "Réservation supprimée avec succès.")
+        return redirect('users_app:my_bookings')
+
+    return render(request, "users_app/confirm_delete.html", {"booking": booking})
 
 

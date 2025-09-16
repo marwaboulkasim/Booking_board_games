@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Supprimer la réservation{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">⚠️ Supprimer la réservation</h2>
+    <p>Voulez-vous vraiment supprimer votre réservation pour la table <strong>{{ booking.table.number_table }}</strong> le <strong>{{ booking.date|date:"d/m/Y" }}</strong> ?</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+        <a href="{% url 'users_app:my_bookings' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

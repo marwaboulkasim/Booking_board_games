@@ -1,0 +1,48 @@
+<table class="table table-striped table-hover align-middle">
+    <thead>
+        <tr>
+            <th>Table</th>
+            <th>Date</th>
+            <th>Heure</th>
+            <th>Type</th>
+            <th>Code privé</th>
+            <th>Jeu</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for booking in bookings %}
+        <tr>
+            <td>Table {{ booking.table.number_table }}</td>
+            <td>{{ booking.date|date:"d/m/Y" }}</td>
+            <td>{{ booking.start_time|time:"H:i" }} - {{ booking.end_time|time:"H:i" }}</td>
+            <td>
+                {% if booking.booking_type == 'privée' %}
+                    <span class="badge bg-danger">🔒 Privée</span>
+                {% else %}
+                    <span class="badge bg-success">👥 Publique</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if booking.code %}{{ booking.code }}{% else %}-{% endif %}
+            </td>
+            <td>
+                {% if booking.game %}{{ booking.game.name_game }}
+                {% elif booking.custom_game %}{{ booking.custom_game }}
+                {% else %}-{% endif %}
+            </td>
+            <td>
+                {% if booking.main_customer == user %}
+                    <a href="{% url 'edit_booking' booking.id %}" class="btn btn-sm btn-outline-primary">Modifier</a>
+                    <a href="{% url 'delete_booking' booking.id %}" class="btn btn-sm btn-outline-danger">Supprimer</a>
+                {% elif user in booking.participants.all %}
+                    <form action="{% url 'leave_public_booking' booking.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-warning">Quitter</button>
+                    </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

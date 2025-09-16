@@ -200,14 +200,43 @@
   </div>
 </div>
 
+<!-- Modal de confirmation pour toutes les réservations -->
+<div class="modal fade" id="bookingConfirmationModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg border-0 rounded-4">
+      <div class="modal-header bg-primary text-white rounded-top-4">
+        <h5 class="modal-title">Réservation confirmée</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Le texte sera rempli dynamiquement par JS -->
+      </div>
+      <div class="modal-footer d-flex justify-content-end">
+        <button type="button" class="btn btn-primary shadow-sm" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- Script JS -->
 {% block extra_js %}
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+
+    // CSRF token
+    const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+
+    // Modals
     const bookingForm = document.getElementById("bookingForm");
     const bookingModalEl = document.getElementById('bookingModal');
     const bookingModal = new bootstrap.Modal(bookingModalEl);
 
+    const confirmationModalEl = document.getElementById('bookingConfirmationModal');
+    const confirmationModal = new bootstrap.Modal(confirmationModalEl);
+    const confirmationBody = confirmationModalEl.querySelector(".modal-body");
+
+    // Gestion choix du jeu
     const gameChoice = document.getElementById("game_choice");
     const catalogueGames = document.getElementById("catalogue_games");
     const customGameDiv = document.getElementById("custom_game_div");
@@ -217,23 +246,64 @@ document.addEventListener("DOMContentLoaded", function() {
         customGameDiv.style.display = (gameChoice.value === "custom") ? "block" : "none";
     }
 
-    // ouverture modal réservation
+    gameChoice.addEventListener("change", updateGameFields);
+    updateGameFields(); // Initialisation
+
+    // Toggle max players selon type de réservation
+    const bookingType = document.getElementById("booking_type");
+    const maxPlayersDiv = document.getElementById("max_players_div");
+
+    function toggleMaxPlayers() {
+        maxPlayersDiv.style.display = (bookingType.value === "publique") ? "block" : "none";
+    }
+
+    bookingType.addEventListener("change", toggleMaxPlayers);
+    toggleMaxPlayers(); // Initialisation
+
+    // Gestion des boutons "Réserver"
     document.querySelectorAll(".reserve-btn").forEach(btn => {
+
+        // Désactiver le bouton si l'utilisateur est déjà inscrit
+        if (btn.dataset.userJoined === "true") {
+            btn.disabled = true;
+            btn.textContent = "Déjà réservé";
+            return; // ne rattache pas l'événement click
+        }
+
         btn.addEventListener("click", () => {
             const bookingId = btn.dataset.bookingId;
 
             if (bookingId) {
-                // Cas d'une table publique existante -> rejoindre
-                fetch(`/users/join-public/${bookingId}/`, {
+                // Cas table publique -> rejoindre
+                fetch(`/users/join-public-booking/${bookingId}/`, {
                     method: "POST",
                     headers: {
-                        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                        "X-CSRFToken": csrftoken,
+                        "Content-Type": "application/json"
                     }
-                }).then(res => {
-                    if (res.ok) location.reload();
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        // Afficher modal de confirmation
+                        confirmationBody.textContent = "Votre réservation pour cette table a bien été enregistrée !";
+                        confirmationModal.show();
+
+                        btn.disabled = true;
+                        btn.textContent = "Réservé";
+                    } else {
+                        confirmationBody.textContent = data.error || "Erreur lors de la réservation.";
+                        confirmationModal.show();
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    confirmationBody.textContent = "Erreur réseau.";
+                    confirmationModal.show();
                 });
+
             } else {
-                // Cas normal : nouvelle réservation
+                // Cas réservation privée -> ouvrir modal
                 const tableId = btn.dataset.tableId;
                 const date = btn.dataset.date;
                 const slotLabel = btn.dataset.slotLabel;
@@ -252,19 +322,8 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    const bookingType = document.getElementById("booking_type");
-    const maxPlayersDiv = document.getElementById("max_players_div");
-
-    function toggleMaxPlayers() {
-        maxPlayersDiv.style.display = (bookingType.value === "publique") ? "block" : "none";
-    }
-
-    bookingType.addEventListener("change", toggleMaxPlayers);
-    document.addEventListener("DOMContentLoaded", toggleMaxPlayers);
-
-    // gestion choix du jeu
-    gameChoice.addEventListener("change", updateGameFields);
 });
 </script>
 {% endblock %}
+
 {% endblock %}

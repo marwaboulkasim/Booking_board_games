@@ -34,14 +34,27 @@
                     -
                 {% endif %}
             </td>
-
-
             <td>{{ booking.booking_type|title }}</td>
             <td>{% if booking.code %}{{ booking.code }}{% else %}-{% endif %}</td>
             <td>
-                <a href="{% url 'users_app:edit_booking' booking.id %}" class="btn btn-sm btn-primary">Modifier</a>
-                <a href="{% url 'users_app:delete_booking' booking.id %}" class="btn btn-sm btn-danger"
-                   onclick="return confirm('Supprimer cette réservation ?');">Supprimer</a>
+                {% if booking.main_customer == user %}
+                    <!-- Le créateur peut modifier ou supprimer -->
+                    <a href="{% url 'users_app:edit_booking' booking.id %}" class="btn btn-sm btn-primary">Modifier</a>
+                    <a href="{% url 'users_app:delete_booking' booking.id %}" class="btn btn-sm btn-danger"
+                       onclick="return confirm('Supprimer cette réservation ?');">Supprimer</a>
+                {% elif user in booking.participants.all %}
+                    <!-- Les participants peuvent quitter -->
+                    <form action="{% url 'users_app:leave_public_booking' booking.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-warning"
+                                onclick="return confirm('Voulez-vous vraiment quitter cette table ?');">
+                            Quitter
+                        </button>
+                    </form>
+                {% else %}
+                    <!-- Les autres n'ont aucun bouton -->
+                    -
+                {% endif %}
             </td>
         </tr>
         {% endfor %}
