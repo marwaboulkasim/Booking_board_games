@@ -35,64 +35,6 @@
                 Mes Réservations
                 <span class="text-primary">{{ date }}</span>
             </h1>
-{% if bookings %}
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Créneau</th>
-            <th>Table</th>
-            <th>Jeu</th>
-            <th>Type</th>
-            <th>Code</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for booking in bookings %}
-        <tr>
-            <td>{{ booking.date|date:"d/m/Y" }}</td>
-            <td>{{ booking.start_time|time:"H:i" }} ({{ booking.duration }})</td>
-            <td>{{ booking.table.number_table }}</td>
-            <td>
-                {% if booking.game %}
-                    {{ booking.game.name_game }}
-                {% elif booking.custom_game %}
-                    {{ booking.custom_game }}
-                {% else %}
-                    -
-                {% endif %}
-            </td>
-            <td>{{ booking.booking_type|title }}</td>
-            <td>{% if booking.code %}{{ booking.code }}{% else %}-{% endif %}</td>
-            <td>
-                {% if booking.main_customer == user %}
-                    <!-- Le créateur peut modifier ou supprimer -->
-                    <a href="{% url 'users_app:edit_booking' booking.id %}" class="btn btn-sm btn-primary">Modifier</a>
-                    <a href="{% url 'users_app:delete_booking' booking.id %}" class="btn btn-sm btn-danger"
-                       onclick="return confirm('Supprimer cette réservation ?');">Supprimer</a>
-                {% elif user in booking.participants.all %}
-                    <!-- Les participants peuvent quitter -->
-                    <form action="{% url 'users_app:leave_public_booking' booking.id %}" method="post" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-warning"
-                                onclick="return confirm('Voulez-vous vraiment quitter cette table ?');">
-                            Quitter
-                        </button>
-                    </form>
-                {% else %}
-                    <!-- Les autres n'ont aucun bouton -->
-                    -
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<p>Vous n'avez aucune réservation pour le moment.</p>
-{% endif %}
-
             {% if bookings %}
                 <div class="table-responsive">
                     <table class="table table-hover align-middle text-center" style="background-color: #ffffff;">
