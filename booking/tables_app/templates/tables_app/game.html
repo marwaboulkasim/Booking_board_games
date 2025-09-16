@@ -12,41 +12,43 @@
         <a href="{% url 'tables_app:home' %}" class="btn btn-outline-secondary btn-sm shadow-sm">🏠 Retour à l'accueil</a>
     </div>
 
-    <h1 class="mb-4 text-center title-games">🎲 Nos Jeux Disponibles</h1>
+   <h1 class="mb-4 text-center title-games">🎲 Nos Jeux Disponibles</h1>
 
-    <!-- Formulaire de filtre -->
-    <form method="get" action="{% url 'tables_app:games' %}" class="row g-3 mb-4 justify-content-center">
-        <div class="col-md-3">
-            <label for="category" class="form-label text-secondary">Catégorie :</label>
-            <select name="category" id="category" class="form-select border-secondary shadow-sm">
-                <option value=""> Toutes </option>
-                {% for category in categories %}
-                    <option value="{{ category }}" {% if request.GET.category == category %}selected{% endif %}>{{ category }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="col-md-3">
-            <label for="players" class="form-label text-secondary">Nombre minimum de joueurs :</label>
-            <select name="players" id="players" class="form-select border-secondary shadow-sm">
-                <option value=""> Tous </option>
-                {% for nb in player_options %}
-                    <option value="{{ nb }}" {% if request.GET.players == nb|stringformat:"s" %}selected{% endif %}>{{ nb }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="col-md-3">
-            <label for="max_players" class="form-label text-secondary">Nombre maximum de joueurs :</label>
-            <select name="max_players" id="max_players" class="form-select border-secondary shadow-sm">
-                <option value=""> Tous </option>
-                {% for nb in max_player_options %}
-                    <option value="{{ nb }}" {% if request.GET.max_players == nb|stringformat:"s" %}selected{% endif %}>{{ nb }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="col-md-2 d-flex align-items-end">
-            <button type="submit" class="btn btn-secondary w-100 shadow-sm">Filtrer</button>
-        </div>
-    </form>
+<form method="get" action="{% url 'tables_app:games' %}" class="row g-3 mb-4 form-filter">
+    <div class="col-md-3">
+        <label for="category" class="form-label text-secondary">Catégorie :</label>
+        <select name="category" id="category" class="form-select border-secondary shadow-sm">
+            <option value=""> Toutes </option>
+            {% for category in categories %}
+                <option value="{{ category }}" {% if request.GET.category == category %}selected{% endif %}>{{ category }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="players" class="form-label text-secondary">Nombre minimum de joueurs :</label>
+        <select name="players" id="players" class="form-select border-secondary shadow-sm">
+            <option value=""> Tous </option>
+            {% for nb in player_options %}
+                <option value="{{ nb }}" {% if request.GET.players == nb|stringformat:"s" %}selected{% endif %}>{{ nb }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="max_players" class="form-label text-secondary">Nombre maximum de joueurs :</label>
+        <select name="max_players" id="max_players" class="form-select border-secondary shadow-sm">
+            <option value=""> Tous </option>
+            {% for nb in max_player_options %}
+                <option value="{{ nb }}" {% if request.GET.max_players == nb|stringformat:"s" %}selected{% endif %}>{{ nb }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-secondary w-100 shadow-sm">Filtrer</button>
+    </div>
+</form>
+
+
+
 
     <hr>
 

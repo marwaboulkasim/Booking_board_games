@@ -223,8 +223,10 @@ a:hover {
     color: #25615b;
 }
 
-/*jeu*/
+/*-----------jeu---------------------*/
 /* Conteneur principal */
+
+
 .container {
     max-width: 1000px;
     margin: 50px auto;
@@ -327,7 +329,10 @@ h1 {
         max-width: 100%;
     }
 }
-/*delete booking */form {
+
+
+/*delete booking */
+form {
     max-width: 700px;
     margin: 50px auto;
     padding: 30px 25px;
@@ -344,21 +349,48 @@ h1 {
 }
 
 /* Champs du formulaire */
-.mb-3 input,
-.mb-3 select {
-    border-radius: 10px;
-    border: 1px solid #2F807D;
-    padding: 10px 12px;
-    width: 100%;
-    font-size: 1rem;
-    margin-top: 5px;
-}
+
 
 /* Labels */
 .mb-3 label {
     font-weight: bold;
     color: #235452;
 }
+
+.form-filter {
+    max-width: 1500px; /* correspond à la largeur max de la container des cards */
+    margin: 0 auto 40px auto; /* centré + espacement inférieur */
+    padding: auto;
+}
+
+.form-filter .form-label {
+    font-weight: bold;
+    color: #235452;
+}
+
+.form-filter .form-select {
+    border-radius: 12px;
+    border: 1px solid #2F807D;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.form-filter .form-select:focus {
+    border-color: #25615b;
+    box-shadow: 0 0 5px rgba(47,128,125,0.5);
+    outline: none;
+}
+
+.form-filter .btn {
+    border-radius: 12px;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+.form-filter .btn:hover {
+    transform: scale(1.03);
+}
+
 
 /* Boutons */
 .btn {
