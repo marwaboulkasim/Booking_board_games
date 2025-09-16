@@ -23,21 +23,29 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
-                {% if user.is_authenticated %}
-                    <li class="nav-item"><span class="nav-link">Connecté : {{ user.username }}</span></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'tables_app:home' %}">Accueil</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'tables_app:calendar' %}">Réserver</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'contact_app:contact' %}">Contact</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'users_app:logout' %}">Se déconnecter</a></li>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'users_app:login' %}">Connexion</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'users_app:register' %}">Inscription</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'tables_app:games' %}">Nos jeux disponibles</a></li>
-                {% endif %}
-            </ul>
-        </div>
+       <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav me-auto "> <!-- liens principaux à gauche -->
+        {% if user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'tables_app:home' %}">Accueil</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'tables_app:calendar' %}">Réserver</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'contact_app:contact' %}">Contact</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'users_app:logout' %}">Se déconnecter</a></li>
+        {% else %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'users_app:login' %}">Connexion</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'users_app:register' %}">Inscription</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'tables_app:games' %}">Nos jeux disponibles</a></li>
+        {% endif %}
+    </ul>
+
+   {% if user.is_authenticated %}
+    <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+            <span class="nav-link fw-bold">Connecté : {{ user.username }}</span>
+        </li>
+    </ul>
+{% endif %}
+</div>
+
     </div>
 </nav>
 

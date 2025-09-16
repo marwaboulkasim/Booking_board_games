@@ -358,7 +358,7 @@ h1 {
 }
 
 .form-filter {
-    max-width: 1500px; /* correspond à la largeur max de la container des cards */
+    max-width: 1490px; /* correspond à la largeur max de la container des cards */
     margin: 0 auto 40px auto; /* centré + espacement inférieur */
     padding: auto;
 }
