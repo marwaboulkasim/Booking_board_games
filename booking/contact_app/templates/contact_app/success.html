@@ -3,8 +3,32 @@
 {% block title %}Message envoyé{% endblock %}
 
 {% block content %}
-<h1>Merci pour votre message !</h1>
-<p>Nous avons bien reçu votre demande, nous vous répondrons dès que possible.</p>
+<div class="container my-5 d-flex justify-content-center align-items-center" style="min-height:70vh;">
 
-<a href="{% url 'contact_app:contact' %}">Retour au formulaire</a>
+    <!-- Carte de confirmation animée -->
+    <div class="card shadow-lg p-5 text-center animate__animated animate__fadeInDown" 
+         style="background-color:#E8F4F2; border-left:8px solid #2F807D; border-radius:16px; max-width:600px; transition: transform 0.3s;">
+        
+        <!-- Icone animée -->
+        <div style="font-size:4rem; color:#235452;" class="mb-3 animate__animated animate__bounceIn">
+            ✅
+        </div>
+
+        <!-- Titre -->
+        <h1 class="display-4 fw-bold mb-3" style="color:#235452;">Message envoyé !</h1>
+        <p class="lead mb-4" style="color:#2F807D;">Nous avons bien reçu votre demande et nous vous répondrons dès que possible.</p>
+        
+        <!-- Bouton avec hover effect -->
+        <a href="{% url 'contact_app:contact' %}" class="btn btn-lg" 
+           style="background-color:#2F807D; color:white; font-weight:bold; border-radius:12px; transition: transform 0.2s, box-shadow 0.2s;"
+           onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.3)';"
+           onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.2)';">
+           🔄 Retour au formulaire
+        </a>
+    </div>
+
+</div>
+
+<!-- Animate.css CDN pour les animations -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 {% endblock %}

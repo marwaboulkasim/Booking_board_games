@@ -1,24 +1,55 @@
 {% extends "base.html" %}
-
 {% load static %}
-
-
 
 {% block title %}Contact{% endblock %}
 
 {% block content %}
-<h1>Contactez-nous</h1>
-<div class="container">
-    <p>
-        Un problème avec votre réservation ? </br> Des difficultés à réserver une table ? </br> Ou simplement des questions ? </br>
-        Notre équipe fera de son mieux pour vous répondre dans les meilleurs délais.
-    </p>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
+<div class="container my-5">
 
-        <button type="submit">Envoyer</button>
-    </form>
+    <!-- Titre principal -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold" style="color:#235452;">📩 Contactez-nous</h1>
+        <p class="lead" style="color:#2F807D;">Un problème avec votre réservation ? Des questions ? Nous sommes là pour vous aider !</p>
+    </div>
+
+    <div class="row g-5">
+        <!-- Infos de contact -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm p-4 h-100" style="background-color:#E8F4F2; border-left:6px solid #2F807D;">
+                <h4 class="fw-bold mb-3" style="color:#235452;">📞 Informations de contact</h4>
+                <p><strong>Email :</strong> support@bookinggame.com</p>
+                <p><strong>Téléphone :</strong> +33 1 23 45 67 89</p>
+                <p><strong>Adresse :</strong> 123 Rue du Jeu, Montpellier</p>
+                <hr>
+                <p class="text-muted">Notre équipe fait de son mieux pour vous répondre dans les plus brefs délais.</p>
+            </div>
+        </div>
+
+        <!-- Formulaire -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm p-4" style="background-color:#E8F4F2; border-left:6px solid #235452;">
+                <h4 class="fw-bold mb-3" style="color:#2F807D;">💬 Envoyez-nous un message</h4>
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_name" class="form-label" style="color:#235452;">Nom</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label" style="color:#235452;">Email</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_message" class="form-label" style="color:#235452;">Message</label>
+                        {{ form.message }}
+                    </div>
+                    <button type="submit" class="btn w-100" style="background-color:#2F807D; color:white; font-weight:bold; border-radius:8px;">
+                        ✉️ Envoyer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </div>
-
 {% endblock %}

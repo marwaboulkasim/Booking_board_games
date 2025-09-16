@@ -7,14 +7,14 @@
 
     <!-- Titre principal -->
     <div class="text-center mb-5">
-        <h1 class="display-4 fw-bold">À propos de Booking Board Games 🎲</h1>
-        <p class="lead">Réservez facilement vos tables et profitez d’un espace ludique convivial.</p>
+        <h1 class="display-4 fw-bold" style="color:#235452;">À propos de Booking Board Games 🎲</h1>
+        <p class="lead" style="color:#2F807D;">Réservez facilement vos tables et profitez d’un espace ludique convivial.</p>
     </div>
 
     <!-- Mission -->
     <div class="mb-5">
-        <h2 class="fw-bold text-primary mb-3">Notre mission</h2>
-        <p>
+        <h2 class="fw-bold mb-3" style="color:#235452;">Notre mission</h2>
+        <p style="color:#2F807D;">
             Offrir un espace convivial où les passionnés de jeux peuvent se retrouver, partager des moments agréables
             et découvrir de nouveaux jeux.  
             Grâce à cette plateforme, vous pouvez réserver une table en quelques clics, choisir votre jeu préféré
@@ -24,36 +24,36 @@
 
     <!-- Fonctionnalités -->
     <div class="mb-5">
-        <h2 class="fw-bold text-primary mb-3">Fonctionnalités principales</h2>
+        <h2 class="fw-bold mb-3" style="color:#235452;">Fonctionnalités principales</h2>
         <ul class="list-group list-group-flush">
-            <li class="list-group-item">Réserver une table privée ou publique</li>
-            <li class="list-group-item">Rejoindre une partie en cours avec un code d’accès</li>
-            <li class="list-group-item">Choisir un jeu disponible dans notre ludothèque ou apporter le vôtre</li>
-            <li class="list-group-item">Communiquer avec les autres joueurs via un salon textuel</li>
-            <li class="list-group-item">Gérer facilement vos réservations (création, annulation)</li>
+            <li class="list-group-item" style="background-color:#E8F4F2; color:#235452;">Réserver une table privée ou publique</li>
+            <li class="list-group-item" style="background-color:#E8F4F2; color:#235452;">Rejoindre une partie en cours avec un code d’accès</li>
+            <li class="list-group-item" style="background-color:#E8F4F2; color:#235452;">Choisir un jeu disponible dans notre ludothèque ou apporter le vôtre</li>
+            <li class="list-group-item" style="background-color:#E8F4F2; color:#235452;">Communiquer avec les autres joueurs via un salon textuel</li>
+            <li class="list-group-item" style="background-color:#E8F4F2; color:#235452;">Gérer facilement vos réservations (création, annulation)</li>
         </ul>
     </div>
 
     <!-- Équipe de développement -->
     <div class="mb-5">
-        <h2 class="fw-bold text-primary mb-3">L’équipe de développement</h2>
+        <h2 class="fw-bold mb-3" style="color:#235452;">L’équipe de développement</h2>
         <div class="row g-4">
             <div class="col-md-4 text-center">
-                <div class="card shadow-sm h-100 p-3">
-                    <h5 class="fw-bold">Marwa</h5>
-                    <p class="mb-0">Auth, gestion des utilisateurs & Réservation</p>
+                <div class="card shadow-sm h-100 p-3" style="background-color:#E8F4F2; border-left:5px solid #2F807D;">
+                    <h5 class="fw-bold" style="color:#235452;">Marwa</h5>
+                    <p class="mb-0" style="color:#2F807D;">Auth, gestion des utilisateurs & Réservation</p>
                 </div>
             </div>
             <div class="col-md-4 text-center">
-                <div class="card shadow-sm h-100 p-3">
-                    <h5 class="fw-bold">Thibaut</h5>
-                    <p class="mb-0">Base de données & gestion des tables</p>
+                <div class="card shadow-sm h-100 p-3" style="background-color:#E8F4F2; border-left:5px solid #2F807D;">
+                    <h5 class="fw-bold" style="color:#235452;">Thibaut</h5>
+                    <p class="mb-0" style="color:#2F807D;">Base de données & gestion des tables</p>
                 </div>
             </div>
             <div class="col-md-4 text-center">
-                <div class="card shadow-sm h-100 p-3">
-                    <h5 class="fw-bold">Gaëtan</h5>
-                    <p class="mb-0">Réservations & interface calendrier</p>
+                <div class="card shadow-sm h-100 p-3" style="background-color:#E8F4F2; border-left:5px solid #2F807D;">
+                    <h5 class="fw-bold" style="color:#235452;">Gaëtan</h5>
+                    <p class="mb-0" style="color:#2F807D;">Réservations & interface calendrier</p>
                 </div>
             </div>
         </div>
@@ -61,14 +61,18 @@
 
     <!-- Conclusion -->
     <div class="text-center mb-5">
-        <p class="fs-5">
+        <p class="fs-5" style="color:#2F807D;">
             Ce projet a été développé dans le cadre de notre formation en développement web avec <strong>Django</strong>.
         </p>
     </div>
 
     <!-- Bouton retour -->
     <div class="text-center">
-        <a href="{% url 'tables_app:home' %}" class="btn btn-primary btn-lg shadow-sm">🏠 Retour à l'accueil</a>
+        <a href="{% url 'tables_app:home' %}" 
+           class="btn btn-lg shadow-sm" 
+           style="background-color:#2F807D; color:white; font-weight:bold; border-radius:8px;">
+            🏠 Retour à l'accueil
+        </a>
     </div>
 
 </div>

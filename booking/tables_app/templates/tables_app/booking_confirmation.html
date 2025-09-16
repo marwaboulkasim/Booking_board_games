@@ -4,25 +4,48 @@
 {% block title %}Confirmation{% endblock %}
 
 {% block content %}
-<div class="confirmation-container">
-    <h1>✅ Réservation confirmée !</h1>
+<div class="container my-5">
 
-    <p>Merci <strong>{{ booking.main_customer.pseudo }}</strong>, votre réservation est bien enregistrée.</p>
+    <!-- Carte de confirmation -->
+    <div class="card shadow-lg border-0 rounded-4 bg-light">
+        <div class="card-body text-center p-5">
 
-    <ul>
-        <li><strong>Table :</strong> {{ booking.table.number_table }}</li>
-        <li><strong>Date :</strong> {{ booking.date }}</li>
-        <li><strong>Heure de début :</strong> {{ booking.start_time }}</li>
-        <li><strong>Durée :</strong> {{ booking.duration }}</li>
-        <li><strong>Type :</strong> {{ booking.get_booking_type_display }}</li>
-        <li><strong>Jeu réservé :</strong> {{ game_name }}</li>
+            <!-- Icône et titre -->
+            <div class="mb-4">
+                <h1 class="display-5 fw-bold text-success">✅ Réservation confirmée !</h1>
+                <p class="lead text-dark">
+                    Merci <strong>{{ booking.main_customer.pseudo }}</strong>, votre réservation a bien été enregistrée.
+                </p>
+            </div>
 
-    </ul>
+            <!-- Détails de la réservation -->
+            <ul class="list-group list-group-flush text-start mb-4">
+                <li class="list-group-item"><strong>Table :</strong> {{ booking.table.number_table }}</li>
+                <li class="list-group-item"><strong>Date :</strong> {{ booking.date }}</li>
+                <li class="list-group-item"><strong>Heure de début :</strong> {{ booking.start_time }}</li>
+                <li class="list-group-item"><strong>Durée :</strong> {{ booking.duration }}</li>
+                <li class="list-group-item"><strong>Type :</strong> {{ booking.get_booking_type_display }}</li>
+                <li class="list-group-item"><strong>Jeu réservé :</strong> {{ game_name }}</li>
+            </ul>
 
-{% if booking.booking_type == "privée" %}
-    <p>Code privé pour votre réservation : <strong>{{ booking.code }}</strong></p>
-{% endif %}
+            <!-- Code privé si nécessaire -->
+            {% if booking.booking_type == "privée" %}
+            <div class="alert alert-secondary rounded-3 shadow-sm">
+                🎟️ Code privé pour votre réservation : 
+                <strong>{{ booking.code }}</strong>
+            </div>
+            {% endif %}
 
-    <a href="{% url 'tables_app:calendar' %}?date={{ booking.date }}" class="btn btn-primary"> Retour au calendrier</a>
+            <!-- Bouton retour -->
+            <div class="mt-4">
+                <a href="{% url 'tables_app:calendar' %}?date={{ booking.date }}" 
+                   class="btn btn-secondary btn-lg shadow-sm">
+                    📅 Retour au calendrier
+                </a>
+            </div>
+
+        </div>
+    </div>
+
 </div>
 {% endblock %}

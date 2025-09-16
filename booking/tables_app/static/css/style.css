@@ -13,6 +13,81 @@ a {
 
 
 
+
+/* ----------------- register ----------------- */
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #d9f0ef, #ffffff); /* fond plus rempli */
+    padding: 0 10px;
+}
+
+.register-card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 60px 50px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 600px; /* plus large pour remplir l’écran */
+    text-align: center;
+}
+
+.register-title {
+    color: #2F807D;
+    margin-bottom: 35px;
+    font-weight: bold;
+    font-size: 2.4rem; /* plus grand */
+}
+
+.register-form .form-control {
+    border-radius: 12px;
+    margin-bottom: 20px;
+    padding: 16px;
+    border: 2px solid #2F807D;
+    font-size: 1.1rem;
+}
+
+.register-form .form-control:focus {
+    border-color: #25615b;
+    box-shadow: 0 0 5px rgba(47,128,125,0.5);
+    outline: none;
+}
+
+.btn-submit {
+    background-color: #2F807D;
+    color: #fff;
+    border: none;
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-submit:hover {
+    background-color: #25615b;
+    transform: scale(1.03);
+}
+
+.login-link {
+    margin-top: 25px;
+    font-size: 1rem;
+}
+
+.login-link a {
+    color: #2F807D;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-link a:hover {
+    color: #25615b;
+    text-decoration: underline;
+}
+
 /* ----------------- BUTTONS ----------------- */
 .btn-primary {
     background-color: #fff6f0;
@@ -21,31 +96,245 @@ a {
 }
 
 .btn-primary:hover {
-    background-color: #C49087;
+    background-color: #196664;
     transform: scale(1.05);
 }
 
-/* ----------------- CARDS ----------------- */
+
+
+/* ----------------- CARDS GAME----------------- */
+/* games.css */
+/* games.css */
+
+/* Fond général */
+.container {
+    background-color: #f5f5f5;
+    padding: 40px 20px;
+    border-radius: 15px;
+}
+
+/* Bouton retour */
+.btn-outline-secondary {
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #2F807D;
+    color: #fff;
+    border-color: #2F807D;
+}
+
+/* Titre de la page */
+h1 {
+   
+    font-weight: bold;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #2F807D;
+}
+.title-games {
+    color: #2F807D;
+    font-weight: bold;
+}
+
+
+/* Formulaire de filtre */
+.form-select {
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #2F807D;
+    background-color: #d0f0f7; /* bleu clair */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.form-select:focus {
+    border-color: #25615b;
+    box-shadow: 0 0 5px rgba(47,128,125,0.5);
+}
+
+/* Bouton Filtrer */
+.btn-secondary {
+    background-color: #2F807D;
+    border: none;
+    font-weight: bold;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #25615b;
+}
+
+/* Cartes des jeux */
 .card {
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Images des cartes */
+.card-img-top {
+    /*height: 150px; /* réduit pour mieux voir les images 
+    object-fit: cover;
+    width: 100%; */
+    height: 120px;           /* réduit la hauteur pour voir toute l'image */
+    object-fit: contain;     /* l'image est complètement visible */
+    width: 100%;
+    background-color: #f0f0f0; /* fond clair si l'image n'occupe pas toute la place */
+    
+}
+
+/* Titres des cartes */
+.card-title {
+    color: #2F807D;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 10px 0 0 0;
+}
+
+/* Texte "Pas d'image" */
+.card-img-top span {
+    color: #888;
+    font-size: 0.95rem;
+}
+
+/* Message si pas de jeux */
+.text-muted {
+    font-size: 1rem;
+     color: #25615b;
+}
+
+/* Ajustement général des liens */
+a {
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #25615b;
+}
+
+
+/* ----------------- CALENDAR PAGE ----------------- */
+.calendar-page h1, .calendar-page h2 {
+    color: #235452;
+}
+
+.calendar-page .btn-outline-secondary {
+    border-color: #235452;
+    color: #235452;
+}
+
+.calendar-page .btn-outline-secondary:hover {
+    background-color: #2F807D;
+    color: #fff;
+    border-color: #2F807D;
+}
+
+.calendar-page .card {
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     transition: transform 0.2s;
 }
 
-.card:hover {
+.calendar-page .card:hover {
     transform: translateY(-5px);
 }
 
-/* ----------------- TABLES ----------------- */
-.table th {
-    background-color: #C49087;
-    color: #fff;
+.calendar-page .card .card-title {
     font-weight: 600;
 }
 
-.table-striped > tbody > tr:nth-of-type(odd) {
-    background-color: #ffe3eb; /* rose clair */
+.calendar-page .list-group-item {
+    border-radius: 8px;
+    margin-bottom: 5px;
 }
+
+.reserve-btn {
+    transition: transform 0.2s;
+}
+
+.reserve-btn:hover {
+    transform: scale(1.05);
+}
+
+/* ----------------- TABLES ----------------- */
+.table-primary {
+    background-color: #2F807D !important;
+    color: #fff !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #e0f2f1; /* pastel clair */
+}
+
+/* ----------------- MODAL ----------------- */
+.modal-content {
+    border-radius: 15px;
+}
+
+.modal-header {
+    background-color: #2F807D;
+    color: #fff;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.modal-footer .btn-outline-secondary {
+    border-color: #235452;
+    color: #235452;
+}
+
+.modal-footer .btn-outline-secondary:hover {
+    background-color: #2F807D;
+    color: #fff;
+    border-color: #2F807D;
+}
+
+.modal-footer .btn-success {
+    background-color: #2F807D;
+    border-color: #2F807D;
+}
+
+.modal-footer .btn-success:hover {
+    background-color: #235452;
+}
+
+/* ----------------- FORM CONTROLS ----------------- */
+.form-control, .form-select {
+    border-radius: 10px;
+    box-shadow: none;
+}
+
+
+
+/* ----------------- TABLES ----------------- */
+.table {
+    border: 2px solid #2F807D; /* couleur moyenne pour contraste */
+    border-radius: 12px;
+    overflow: hidden; /* pour que les bordures arrondies soient respectées */
+}
+
+.table th, .table td {
+    border-color: #196664; /* couleurs des séparations internes */
+     color: #fff;
+    font-weight: 600;
+}
+
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #e0f2f1; /* pastel clair */
+}
+
 
 /* ----------------- FORMULAIRES ----------------- */
 .form-control {
@@ -57,41 +346,46 @@ a {
     border-radius: 10px;
 }
 
-/* ----------------- NAVIGATION ----------------- */
-
-
-
-.custom-nav .container-fluid {
-    padding-left: 20px; /* ajuste selon ton design */
-    padding-right: 20px;
-}
-
-
+/* ----------------- NAVIGATION ----------------- *//* ----------------- NAVIGATION ----------------- */
 .custom-nav {
-    background-color: #D9C6B0 !important; /* nude */
+    background-color: #235452 !important; /* couleur principale foncée */
     width: 100% !important;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 10; /* supprimer padding global inutile */
     margin: 0;
 }
 
 .custom-nav .navbar-nav {
     width: 100%;
-    justify-content: flex-start; /* étirer les liens */
+    justify-content: flex-start;
+    gap: 20px; /* ajoute de l'espace entre les liens */
+
 }
 
 .custom-nav .nav-link {
-    color: #C49087;
     font-weight: 500;
+    color: #E8F4F2 !important; /* texte clair */
+    padding: 0.5rem 1rem; /* espace interne pour aérer */
+    margin: 0 5px; /* un petit margin horizontal pour respirer */
 }
 
 .custom-nav .nav-link:hover {
-    color: #FFF5E1;
+    color: #2F807D !important; /* texte au survol */
 }
+
+
+
+
+
+
+
+
+
+
+
 
 /* ----------------- FOOTER ----------------- */
 .footer {
-    background-color: #A67B5B; /* marron */
+    background-color: #235452 !important; /* même couleur que la navbar */
     color: #fff;
     width: 100%;
     padding: 30px 20px;
@@ -107,11 +401,6 @@ a {
     font-size: 1rem;
 }
 
-.social-icons {
-    display: flex;
-    gap: 15px;
-}
-
 .social-icons a {
     color: #fff;
     font-size: 1.5rem;
@@ -119,9 +408,10 @@ a {
 }
 
 .social-icons a:hover {
-    color: #FFDAB9; /* clair au hover */
+    color: #2F807D; /* hover accent couleur principale */
     transform: scale(1.3);
 }
+
 
 /* ----------------- GLOBAL ----------------- */
 body, html {
