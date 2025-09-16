@@ -11,15 +11,15 @@ Ce projet a été réalisé dans le cadre de notre formation en développement w
 -  **Réservation de tables** : créer, modifier ou annuler une réservation
 -  **Gestion des utilisateurs** : inscription, connexion, profil personnalisé
 -  **Ludothèque** : choix de jeux proposés (ou ajout du vôtre)
--  **Pages d’information** : Accueil, À propos, FAQ
+-  **Pages d’information** : Accueil, À propos, Contact
 
 ---
 
 ##  Technologies utilisées
 
 - **Backend** : Django (Python 3.12)
-- **Base de données** : SQLite (par défaut) → peut évoluer vers PostgreSQL
-- **Frontend** : HTML, CSS (templates Django)
+- **Base de données** : SQLite
+- **Frontend** : HTML/CSS/JS (templates Django)
 - **Gestion de version** : Git + GitHub
 - **Outils de travail collaboratif** : Figma (maquettes), Git branches
 
@@ -29,6 +29,8 @@ Ce projet a été réalisé dans le cadre de notre formation en développement w
 ```
 Booking_board_games/
 │── booking/ # Configuration principale Django
+│── admin_app/ # Apllication administrateur
+│── contact_app/ # Application de contact
 │── tables_app/ # Application pour la gestion des tables
 │── users_app/ # Application pour l'authentification
 │── static/ # Fichiers CSS, JS, images
@@ -65,8 +67,6 @@ http://127.0.0.1:8000
 
 ## Équipe de développement
 
-Marwa – Authentification & gestion des utilisateurs
-
-Thibaut – Base de données & gestion des tables
-
-Gaëtan – Réservations & interface calendrier
+Marwa
+Thibaut
+Gaëtan
