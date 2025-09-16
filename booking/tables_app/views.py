@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Table, Booking, BookingType, Game
+from .models import Table, Booking, Game
 from datetime import datetime, date, time
-
+from django.db.models import Q
 
 # --- Accueil ---
 def home_view(request):
@@ -41,16 +41,52 @@ def calendar_view(request):
             )
 
             if conflicts.exists():
-                state = conflicts.first().booking_type
-                available = False
+                booking = conflicts.first()
+                if booking.booking_type == 'publique':
+                    # nombre de joueurs = 1 (créateur) + participants
+                    joueurs_actuels = 1 + booking.participants.count() if booking.participants else 1
+                    places_restantes = booking.max_players - joueurs_actuels if booking.max_players else None
+
+                    # état affiché
+                    if places_restantes is None:
+                        state = f"Publique (jeu: {booking.game.name_game if booking.game else '-'})"
+                        available = True
+                    elif places_restantes <= 0:
+                        state = f"Publique — Complète (jeu: {booking.game.name_game if booking.game else '-'})"
+                        available = False
+                    else:
+                        state = f"Publique — {places_restantes} place(s) restantes (jeu: {booking.game.name_game if booking.game else '-'})"
+                        available = True
+
+                    players = [booking.main_customer] + list(booking.participants.all())
+                    booking_id = booking.id
+                else:
+                    # privée
+                    state = 'Privée'
+                    available = False
+                    players = []
+                    booking_id = None
+                    places_restantes = None
             else:
                 state = 'Libre'
                 available = True
+                players = []
+                booking_id = None
+                places_restantes = None
+
+            # Indiquer si l'utilisateur connecté a déjà rejoint ce slot
+            user_joined = False
+            if request.user.is_authenticated and booking_id:
+                user_joined = request.user == booking.main_customer or request.user in booking.participants.all()
 
             table_slots.append({
                 "slot_label": slot["label"],
                 "state": state,
                 "available": available,
+                "players": players,
+                "booking_id": booking_id,
+                "is_full": places_restantes == 0 if booking_id and booking.booking_type == 'publique' else False,
+                "user_joined": user_joined,
             })
 
         tables_data.append({
@@ -62,18 +98,19 @@ def calendar_view(request):
     user_reservations = None
     if request.user.is_authenticated:
         user_reservations = Booking.objects.filter(
-            main_customer=request.user
+            Q(main_customer=request.user) | Q(participants=request.user)
         ).order_by('-date', 'start_time')
 
-    # 👉 Récupérer la liste des jeux disponibles
+    # Liste des jeux
     games = Game.objects.all()
 
     context = {
         "date": selected_date,
         "tables": tables_data,
         "user_reservations": user_reservations,
-        "games": games,  # 👈 on passe les jeux au template
+        "games": games,
     }
+
     return render(request, "tables_app/calendar.html", context)
 
 
@@ -135,7 +172,7 @@ def book_table_view(request):
 
 
 def contact_view(request):
-    return render(request, 'tables_app/contact.html')  # ✅ correction
+    return render(request, 'tables_app/contact.html')
 
 
 def account_view(request):

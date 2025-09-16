@@ -15,7 +15,9 @@ urlpatterns = [
     path("confirmation/<int:booking_id>/", views.booking_confirmation, name="booking_confirmation"),
     path("my-bookings/", views.my_bookings, name="my_bookings"),
     path("my-bookings/<int:booking_id>/edit/", views.edit_booking, name="edit_booking"),
-    path("my-bookings/<int:booking_id>/delete/", views.delete_booking, name="delete_booking"),
+    path('my-bookings/<int:booking_id>/delete/', views.delete_booking, name='delete_booking'),
+    path('join-public-booking/<int:booking_id>/', views.join_public_booking, name='join_public_booking'),
+    path('leave-public-booking/<int:booking_id>/', views.leave_public_booking, name='leave_public_booking'),
 
 ]
 
