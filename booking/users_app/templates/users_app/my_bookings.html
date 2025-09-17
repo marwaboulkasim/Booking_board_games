@@ -35,6 +35,7 @@
                 Mes Réservations
                 <span class="text-primary">{{ date }}</span>
             </h1>
+
             {% if bookings %}
                 <div class="table-responsive">
                     <table class="table table-hover align-middle text-center" style="background-color: #ffffff;">
@@ -83,6 +84,7 @@
                                         {% endif %}
                                     </td>
                                     <td>
+                                        {% if booking.main_customer == user %}
                                         <a href="{% url 'users_app:edit_booking' booking.id %}"
                                            class="btn btn-sm"
                                            style="background-color: #2F807D; color: #ffffff; margin-right:5px;">
@@ -94,6 +96,18 @@
                                            onclick="return confirm('Supprimer cette réservation ?');">
                                             🗑️ Supprimer
                                         </a>
+                                        {% elif user in booking.participants.all %}
+                                        <form action="{% url 'users_app:leave_public_booking' booking.id %}" method="post" style="display:inline; margin: 0px ; padding:0px">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-warning"
+                                                    onclick="return confirm('Voulez-vous vraiment quitter cette table ?');">
+                                                Quitter
+                                            </button>
+                                        </form>
+                                        {% else %}
+                                        -
+                                        {% endif %}
+
                                     </td>
                                 </tr>
                             {% endfor %}
