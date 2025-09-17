@@ -28,6 +28,7 @@
         {% if user.is_authenticated %}
             <li class="nav-item"><a class="nav-link" href="{% url 'tables_app:home' %}">Accueil</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'tables_app:calendar' %}">Réserver</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'users_app:my_bookings' %}">Mes réservations</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'contact_app:contact' %}">Contact</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'users_app:logout' %}">Se déconnecter</a></li>
         {% else %}
